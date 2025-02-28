@@ -1,0 +1,153 @@
+[Preferences] Loading module: renderer_gl
+[ModuleManager] Loading module 'renderer_gl'
+[Init] Initializing library 'renderer_gl'
+[Init] Initialized library 'renderer_gl'
+[ModuleManager] Successfully loaded module 'renderer_gl'
+[Preferences] Loading module: surface
+[ModuleManager] Loading module 'surface'
+[Init] Initializing library 'surface'
+[Init] Initialized library 'surface'
+[ModuleManager] Successfully loaded module 'surface'
+[Preferences] Loading module: volume
+[ModuleManager] Loading module 'volume'
+[Init] Initializing library 'volume'
+[Init] Initialized library 'volume'
+[ModuleManager] Successfully loaded module 'volume'
+[Preferences] Loading module: parameterizer
+[ModuleManager] Loading module 'parameterizer'
+[Init] Initialized library 'parameterizer'
+[ModuleManager] Successfully loaded module 'parameterizer'
+[Preferences] Loading module: devel
+[ModuleManager] Loading module 'devel'
+[Init] Initializing library 'devel'
+[ModuleManager] Successfully loaded module 'devel'
+[Preferences] Loading module: tetmesh_qc
+[ModuleManager] Loading module 'tetmesh_qc'
+[Init] Initializing library 'tetmesh_qc'
+[ModuleManager] Successfully loaded module 'tetmesh_qc'
+[Preferences] Loading module: autoseam
+[ModuleManager] Loading module 'autoseam'
+[Init] Initializing library 'autoseam'
+[ModuleManager] Successfully loaded module 'autoseam'
+[Preferences] Loading module: manifold_harmonics
+[ModuleManager] Loading module 'manifold_harmonics'
+[Init] Initializing library 'manifold_harmonics'
+[ModuleManager] Successfully loaded module 'manifold_harmonics'
+[Preferences] Loading module: ardeco
+[ModuleManager] Loading module 'ardeco'
+[Init] Initializing library 'ardeco'
+[ModuleManager] Successfully loaded module 'ardeco'
+[Preferences] Loading module: spectral
+[ModuleManager] Loading module 'spectral'
+[Init] Initializing library 'spectral'
+[ModuleManager] Successfully loaded module 'spectral'
+[Preferences] Loading module: gabor
+[ModuleManager] Loading module 'gabor'
+[Init] Initializing library 'gabor'
+[ModuleManager] Successfully loaded module 'gabor'
+[Preferences] Loading module: nicostuff
+[ModuleManager] Loading module 'nicostuff'
+[Init] Initializing library 'nicostuff'
+[ModuleManager] Successfully loaded module 'nicostuff'
+[Preferences] Loading module: DFD
+[ModuleManager] Loading module 'DFD'
+[Init] Initializing library 'DFD'
+[ModuleManager] Successfully loaded module 'DFD'
+[Preferences] Loading module: MipQuad
+[ModuleManager] Loading module 'MipQuad'
+[Init] Initializing library 'MipQuad'
+[ModuleManager] Successfully loaded module 'MipQuad'
+[Preferences] Loading module: cgal2graphite
+[ModuleManager] Loading module 'cgal2graphite'
+[Init] Initializing library 'cgal2graphite'
+[ModuleManager] Successfully loaded module 'cgal2graphite'
+[Preferences] Loading module: quick_start
+[ModuleManager] Loading module 'quick_start'
+[Init] Initializing library 'quick_start'
+[Init] Initialized library 'quick_start'
+[ModuleManager] Successfully loaded module 'quick_start'
+[ModuleManager] Loading module 'skin_qt4'
+[Init] Initializing library 'skin_qt4'
+[Init] Initialized library 'skin_qt4'
+[ModuleManager] Successfully loaded module 'skin_qt4'
+[ModuleManager] Loading module 'gel'
+[Init] Initialized library 'gel'
+[ModuleManager] Successfully loaded module 'gel'
+[Graphite] Running main gel file '/home/levy/Programming/graphite/GraphiteTwo/lib/graphite.gel'
+[GEL] Loading file: /home/levy/Programming/graphite/Demo/demographite.gel
+[GEL] Loading demos from /home/levy/Programming/graphite/Demo
+[GEL] found demo in: Rocker
+[GEL] found demo in: Bezier
+[GEL] found demo in: DNA
+[GEL] found demo in: Horse
+[GEL] found demo in: OctaFlower
+[GEL] found demo in: Tiger
+[GEL] found demo in: Skull
+[GEL] found demo in: Male
+[GEL] found demo in: Mandelbrot
+[GEL] found demo in: Bunny
+[GEL] found demo in: Engine
+[GEL] Loading file: /home/levy/Programming/graphite/plugins/OGF/ardeco/ardeco.gel
+[GEL] Loading file: /home/levy/Programming/graphite/plugins/OGF/autoseam/autoseam.gel
+[MapBuilder] Warning: Encountered 2 isolated vertices (removed)
+[ARBFP] compiling
+[pixel_program_ARB] Compile OK
+[Init] Terminating library 'gel'
+[Init] Terminated library 'gel'
+[Init] Terminating library 'skin_qt4'
+[Init] Terminated library 'skin_qt4'
+[Init] Terminating library 'quick_start'
+[Init] Terminated library 'quick_start'
+[Init] Terminating library 'cgal2graphite'
+[Init] Terminated library 'cgal2graphite'
+[Init] Terminating library 'MipQuad'
+[Init] Terminated library 'MipQuad'
+[Init] Terminating library 'DFD'
+[Init] Terminated library 'DFD'
+[Init] Terminating library 'nicostuff'
+[Init] Terminated library 'nicostuff'
+[Init] Terminating library 'gabor'
+[Init] Terminated library 'gabor'
+[Init] Terminating library 'spectral'
+[Init] Terminated library 'spectral'
+[Init] Terminating library 'ardeco'
+[Init] Terminated library 'ardeco'
+[Init] Terminating library 'manifold_harmonics'
+[Init] Terminated library 'manifold_harmonics'
+[Init] Terminating library 'autoseam'
+[Init] Terminated library 'autoseam'
+[Init] Terminating library 'tetmesh_qc'
+[Init] Terminated library 'tetmesh_qc'
+[Init] Terminating library 'devel'
+[Init] Terminated library 'devel'
+[Init] Terminating library 'parameterizer'
+[Init] Terminated library 'parameterizer'
+[Init] Terminating library 'volume'
+[Init] Terminated library 'volume'
+[Init] Terminating library 'surface'
+[Init] Terminated library 'surface'
+[Init] Terminating library 'renderer_gl'
+[Init] Terminated library 'renderer_gl'
+[Init] Terminating library 'scene_graph'
+[Init] Terminated library 'scene_graph'
+[Init] Terminating library 'skin'
+[Init] Terminated library 'skin'
+[Init] Terminating library 'gui'
+[Init] Terminated library 'gui'
+[Init] Terminating library 'renderer'
+[Init] Terminated library 'renderer'
+[Init] Terminating library 'cells'
+[Init] Terminated library 'cells'
+[Init] Terminating library 'image'
+[Init] Terminated library 'image'
+[Init] Terminating library 'math'
+[Init] Terminated library 'math'
+[Init] Terminating library 'gom_basic'
+[Init] Terminated library 'gom_basic'
+[Init] Terminating library 'gom'
+[Init] Terminated library 'gom'
+[Init] Terminating library 'basic'
+[ModuleManager] Terminating dynamic modules
+[ModuleManager] Terminated dynamic modules
+[Init] Terminated library 'basic'
+[Logger] terminating
