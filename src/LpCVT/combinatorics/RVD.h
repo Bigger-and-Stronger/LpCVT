@@ -72,7 +72,7 @@ namespace Geex {
     template <class T> class TriangleAction {
     public:
         TriangleAction(const T& do_it_in) : do_it(do_it_in) { }
-        void operator()(unsigned int v, Mesh* M) {
+        void operator()(unsigned int v, Mesh* M) const {
             for(unsigned int f=0; f<M->nb_facets(); f++) {
                 unsigned int i0 = M->facet_begin(f) ;
                 for(unsigned int i = M->facet_begin(f)+1; i+1<M->facet_end(f); i++) {
