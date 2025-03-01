@@ -17,9 +17,12 @@ target_include_directories(LpCVT PRIVATE ${GMP_INCLUDE_DIR})
 
 target_link_libraries(LpCVT PRIVATE CGAL::CGAL)
 
-set(GMP_DLL "${GMP_INCLUDE_DIR}/../lib/libgmp-10.dll")
-add_custom_command(
-  TARGET LpCVT
-  POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${GMP_DLL}
-          $<TARGET_FILE_DIR:LpCVT>)
+IF(NOT ${APPLE})
+    set(GMP_DLL "${GMP_INCLUDE_DIR}/../lib/libgmp-10.dll")
+    add_custom_command(
+            TARGET LpCVT
+            POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${GMP_DLL}
+            $<TARGET_FILE_DIR:LpCVT>)
+ENDIF ()
+

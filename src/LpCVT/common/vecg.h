@@ -39,6 +39,7 @@
 
 #include <iostream>
 #include <cfloat>
+#include <cmath>
 
 namespace Geex {
 
@@ -124,7 +125,7 @@ namespace Geex {
         vec3g(T x_in, T y_in, T z_in) : x(x_in), y(y_in), z(z_in) {  }
             
         inline T length2() const { return x*x+y*y+z*z ; }
-        inline T length() const { return sqrt(x*x+y*y+z*z) ; }
+        inline T length() const { return std::sqrt(x*x+y*y+z*z) ; }
             
         // operators
         inline thisclass& operator+=(const thisclass& v) { x += v.x ; y += v.y ; z += v.z ; return *this ; }
