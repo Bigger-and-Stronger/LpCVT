@@ -43,10 +43,12 @@
  *
  */
 
+// This code has been modified by Canjia Huang <canjia7@gmail.com> on 25-3-1.
+
+#include "LpCVT/others/macro.h"
 
 #include <LpCVT/combinatorics/mesh.h>
 #include <LpCVT/common/line_stream.h>
-#include <map>
 #include <fstream>
 
 #ifdef WITH_METIS
@@ -56,35 +58,36 @@ extern "C" {
 #endif
 
 namespace Geex {
-
+    /** Check if facet has edge <v1, v2> **/
     static bool has_edge(
-        const std::vector<unsigned int>& facet_vertex_index, 
-        unsigned int facet_begin, unsigned int facet_end,
-        unsigned int v1, unsigned int v2
+        const std::vector<unsigned int>& facet_vertex_index,
+        const unsigned int facet_begin, const unsigned int facet_end,
+        const unsigned int v1, const unsigned int v2
     ) {
-        unsigned int facet_n = facet_end - facet_begin ;
-        for(unsigned int i=0; i<facet_n; i++) {
-            unsigned int w1 = facet_vertex_index[facet_begin + i] ;
-            unsigned int w2 = facet_vertex_index[facet_begin + ((i + 1) % facet_n)] ;
-            if(w1 == v1 && w2 == v2) {
+        const unsigned int facet_n = facet_end - facet_begin ;
+        for (unsigned int i = 0; i < facet_n; ++i) {
+            const unsigned int w1 = facet_vertex_index[facet_begin + i] ;
+            const unsigned int w2 = facet_vertex_index[facet_begin + ((i + 1) % facet_n)] ;
+
+            if (w1 == v1 && w2 == v2) {
                 return true ;
             }
         }
         return false ;
     }
 
-
-    unsigned int Mesh::load(const std::string& filename) {
-        std::cerr << "Mesh: Loading " << filename << std::endl ;
+    unsigned int Mesh::load(const std::string& filename
+        ) {
+        VERBOSE("Mesh: Loading " << filename);
         std::ifstream input(filename.c_str()) ;
         if(!input) {
-            std::cerr << "could not open file." << std::endl ;
+            WARNING("could not open " << filename);
             return 0 ;
         }
         clear() ;
         LineInputStream in(input) ;
         std::vector<vec3> vertex ;
-        std::vector< std::vector<unsigned int> > star ;
+        std::vector< std::vector<unsigned int> > star; // lists of triangles incident to each vertex
 
         // Step 1: load vertices and triangles
         // (and keep track of stars, i.e. lists
@@ -96,21 +99,23 @@ namespace Geex {
             
             in >> keyword ;
             
-            if(keyword == "v") {
+            if(keyword == "v") { // read vertices
                 vec3 p ;
                 in >> p ;
                 vertex.push_back(p) ;
-                star.push_back( std::vector<unsigned int>() ) ;
-            } else if(keyword == "HEADER") {
-                v_offset = (unsigned int)vertex.size() ;
-            } else if(keyword == "VRTX" || keyword == "PVRTX" || keyword == "ATOM") {
+                star.emplace_back(); // XXX: I dont know if this is correct... original: star.push_back( std::vector<unsigned int>() ) ;
+            }
+            else if (keyword == "HEADER")
+                v_offset = static_cast<unsigned int>(vertex.size()) ;
+            else if (keyword == "VRTX" || keyword == "PVRTX" || keyword == "ATOM") {
                 int idx ;
                 vec3 p ;
                 in >> idx >> p ;
                 vertex.push_back(p) ;
-                star.push_back( std::vector<unsigned int>() ) ;
-            } else if(keyword == "TRGL") {
-                int i1,i2,i3 ;
+                star.emplace_back(); // XXX: I dont know if this is correct... original: star.push_back( std::vector<unsigned int>() ) ;
+            }
+            else if (keyword == "TRGL") {
+                int i1, i2, i3 ;
                 in >> i1 >> i2 >> i3 ;
                 std::vector<unsigned int> cur_facet ;
                 cur_facet.push_back(i1-1+v_offset) ;
@@ -118,45 +123,41 @@ namespace Geex {
                 cur_facet.push_back(i3-1+v_offset) ;
                 unsigned int f = nb_facets() ;
                 begin_facet() ;
-                for(unsigned int i=0; i<cur_facet.size(); i++) {
-                    unsigned int v = cur_facet[i] ;
+                for (unsigned int v : cur_facet) {
                     add_vertex(VertexEdge(vertex[v])) ;
                     top_vertex().set_flag(VertexEdge::ORIGINAL) ;
                     vertex_index_.push_back(v) ;
                     star[v].push_back(f) ;
                 }
                 end_facet() ;
-            } else if(keyword == "f") {
+            }
+            else if (keyword == "f") {
                 std::vector<int> cur_facet ;
                 while(!in.eol()) {
                     std::string s ;
                     in >> s ;
-                    if(s.length() > 0) {
+                    if(!s.empty()) {
                         std::istringstream v_input(s) ;
-                        unsigned int index ;
+                        int index ;
                         v_input >> index ;
-                        if(index < 1 || index > vertex.size()) {
-                            std::cerr << "Out of bounds vertex index" 
-                                      << std::endl ;
-                        } else {
+                        if(index < 1 || index > vertex.size())
+                            WARNING("Out of bounds vertex index");
+                        else
                             cur_facet.push_back(index - 1) ;
-                        }
+
                         char c ;
                         v_input >> c ;
                         // tex vertex, ignored
-                        if(c == '/') {
+                        if(c == '/')
                             v_input >> index ;
-                        }
                     }
                 }
-                if(cur_facet.size() < 3) {
-                    std::cerr << "facet with less than 3 vertices, ignoring" 
-                              << std::endl ;
-                } else {
+                if (cur_facet.size() < 3)
+                    WARNING("facet with less than 3 vertices, ignoring");
+                else {
                     unsigned int f = nb_facets() ;
                     begin_facet() ;
-                    for(unsigned int i=0; i<cur_facet.size(); i++) {
-                        unsigned int v = cur_facet[i] ;
+                    for (unsigned int v : cur_facet) {
                         add_vertex(VertexEdge(vertex[v])) ;
                         top_vertex().set_flag(VertexEdge::ORIGINAL) ;
                         vertex_index_.push_back(v) ;
@@ -171,60 +172,50 @@ namespace Geex {
         std::copy(vertex.begin(), vertex.end(), original_vertices_.begin());
         
         // Step 2: compute facet adjacencies
-        for(unsigned int f=0; f<nb_facets(); f++) {
+        for (unsigned int f = 0, f_end = nb_facets(); f < f_end; ++f) {
             unsigned int facet_base = facet_begin(f) ;
             unsigned int facet_n = facet_size(f) ;
 
-            for(unsigned int i=0; i<facet_n; i++) {
+            for (unsigned int i = 0; i < facet_n; ++i) {
                 unsigned int v1 = facet_base + i ;
                 unsigned int v2 = facet_base + ((i + 1) % facet_n) ;
                 unsigned int gv1 = vertex_index_[v1] ;
                 unsigned int gv2 = vertex_index_[v2] ;
-                const std::vector<unsigned int>& S = star[gv1] ;
-                for(unsigned int k=0; k<S.size(); k++) {
-                    unsigned int g = S[k] ;
-                    if(
-                        g != f && has_edge(
-                            vertex_index_, 
-                            facet_begin(g), facet_end(g), gv2, gv1
-                        )
-                    ) {
+                const std::vector<unsigned int>& S = star[gv1] ; // the list of triangles adjacent to vertex gv1
+                for (unsigned int g : S)
+                    if (g != f && has_edge(vertex_index_, facet_begin(g), facet_end(g), gv2, gv1)) {
                         this->vertex(v1).f = g ;
                         break ;
                     }
-                }
             }
         }
 
         // Step 3: assign facet ids
-        for(unsigned int f=0; f<nb_facets(); f++) {
+        for (unsigned int f = 0; f < nb_facets(); ++f)
             facet_info(f).id = f ;
-        }
 
         // Step 4: initialize symbolic information
         init_symbolic_vertices() ;
 
         // Just for checking
         unsigned int nb_borders = 0 ;
-        for(unsigned int i=0; i<nb_vertices(); i++) {
-            if(this->vertex(i).f < 0) {
-                nb_borders++ ;
-            }
-        }
+        for(unsigned int i = 0; i < nb_vertices(); ++i)
+            if(this->vertex(i).f < 0) // an edge adjacent to vertex(i) is an edge on the open boundary
+                ++nb_borders;
+
         double vol = signed_volume() ;
         orientation_ = (vol > 0.0) ;
-        std::cerr << "Mesh loaded, nb_facets = " << nb_facets() 
-                  << " nb_borders = " << nb_borders 
-                  << " signed volume = " << vol
-                  << std::endl ;
-        if(!orientation_ && nb_borders == 0) {
-            std::cerr << " WARNING ! orientation is negative"
-                      << std::endl ;
-        }
+        VERBOSE("Mesh loaded, nb_facets = " << nb_facets() << ", "
+                << "nb_borders = " << nb_borders << ", "
+                << "signed volume = " << vol);
+        if (!orientation_ && nb_borders == 0)
+            WARNING(" WARNING! orientation is negative");
+
         return nb_borders ;
     }
     
-    void Mesh::init_symbolic_vertices() {
+    void Mesh::init_symbolic_vertices(
+        ) {
         for(unsigned int f=0; f<nb_facets(); f++) {
             for(unsigned int i1=facet_begin(f); i1<facet_end(f); i1++) {
                 unsigned int i2=i1+1 ;
@@ -233,17 +224,17 @@ namespace Geex {
                 // (and we do not touch vertex(i1).sym).
                 vertex(i2).sym.clear() ;
                 vertex(i2).sym.add_boundary_facet(f) ;
-                if(vertex(i1).f >= 0) {
+                if(vertex(i1).f >= 0)
                     vertex(i2).sym.add_boundary_facet(vertex(i1).f) ;
-                } else {
+                else {
                     // "Virtual" boundary facet: indicates edge (i1,i2 = i1 \oplus 1)
                     vertex(i2).sym.add_boundary_facet(
                         (i1 + nb_facets()) - facet_begin(f)
                     ) ;
                 }
-                if(vertex(i2).f >= 0) {
+                if(vertex(i2).f >= 0)
                     vertex(i2).sym.add_boundary_facet(vertex(i2).f) ;
-                } else {
+                else {
                     // "Virtual" boundary facet: indicates edge (i2,i2 \oplus 1)
                     vertex(i2).sym.add_boundary_facet(
                         (i2 + nb_facets()) - facet_begin(f) 
@@ -406,5 +397,4 @@ namespace Geex {
     }
 
 #endif
-
 }

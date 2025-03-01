@@ -1,5 +1,5 @@
 //
-// This file is derived from LpCVT/main.cpp in the original code
+// This file is derived from LpCVT/main.cpp in the original code from https://xueyuhanlang.github.io
 // Created by Canjia Huang <canjia7@gmail.com> on 25-3-1.
 //
 
@@ -20,8 +20,6 @@
 #include <LpCVT/combinatorics/RVD.h>
 #include <LpCVT/combinatorics/clipped_VD.h>
 #include <LpCVT/algebra/F_Lp.h>
-#include <LpCVT/common/line_stream.h>
-#include <fstream>
 
 namespace Geex {
 	/** Used by get_combinatorics() in volume mode **/
@@ -32,7 +30,7 @@ namespace Geex {
 			std::vector<vec3>().swap(C);
 		}
 
-		void operator() (const unsigned int i, int j,
+		void operator() (unsigned int i, int j,
 			const VertexEdge& v1, const VertexEdge& v2, const VertexEdge& v3) const;
 	private:
 		std::vector<int>& I;
@@ -49,7 +47,7 @@ namespace Geex {
 			std::vector<int>().swap(F);
 		}
 
-		void operator() (const unsigned int i,
+		void operator() (unsigned int i,
 			const VertexEdge& v1, const VertexEdge& v2, const VertexEdge& v3) const;
 	private:
 		const RestrictedVoronoiDiagram& RVD;
@@ -79,4 +77,4 @@ namespace Geex {
 	void test_algebra(const std::string& mesh_filename, const std::string& pts_filename);
 }
 
-#endif //GEEX_PROCESSOR_H
+#endif //GEEX_TEST_ALGEBRA_H

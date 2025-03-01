@@ -11,21 +11,24 @@
 // This mechanism can be used for both computing F-Lp and displaying the clipped Voronoi cells as in figures 4,5,6
 // in the paper.
 
-// This code has been modified by Canjia Huang <canjia7@gmail.com>
-
-#include <LpCVT/combinatorics/delaunay.h>
+// This code has been modified by Canjia Huang <canjia7@gmail.com> on 25-3-1.
 
 #include "LpCVT/others/Geex_test_combinatorics.h"
 #include "LpCVT/others/Geex_test_algebra.h"
+#include "LpCVT/others/macro.h"
 
+#include <LpCVT/combinatorics/delaunay.h>
 
 int main() {
 	const std::string input_model_name = "three_holes";
 	const std::string input_mesh_path = "../data/" + input_model_name + ".obj";
 	const std::string input_pts_path = "../data/" + input_model_name + ".pts";
 
+	VERBOSE("============= geometry->combinatorics test ==========");
 	Geex::test_combinatorics(input_mesh_path, input_pts_path, "../data/");
-	Geex::test_algebra(input_model_name, input_pts_path);
+	//VERBOSE("============= combinatorics->algebra test  ==========");
+	//VERBOSE("(note: expect large values for f and g)");
+	//Geex::test_algebra(input_model_name, input_pts_path);
 }
 
 /*

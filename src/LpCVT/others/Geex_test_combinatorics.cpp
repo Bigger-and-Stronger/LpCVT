@@ -1,5 +1,5 @@
 //
-// This file is derived from LpCVT/main.cpp in the original code
+// This file is derived from LpCVT/main.cpp in the original code from https://xueyuhanlang.github.io
 // Created by Canjia Huang <canjia7@gmail.com> on 25-3-1.
 //
 
@@ -122,9 +122,9 @@ namespace Geex {
 		delaunay->set_vertices(pts);
 		save_RVD(RVD, output_path + "rvd.obj");
 		save_RDT(RVD, output_path + "rdt.obj");
-		if (nb_borders == 0) {
+		if (nb_borders == 0)
 			save_clippedVD(CVD, output_path + "cvd.obj", 0.7);
-		}
+
 		delete delaunay;
 	}
 }

@@ -43,6 +43,10 @@
  *
  */
 
+// This code has been modified by Canjia Huang <canjia7@gmail.com> on 25-3-1.
+
+#include "LpCVT/others/macro.h"
+
 #include <LpCVT/combinatorics/delaunay_CGAL.h>
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include <CGAL/Point_3.h>
@@ -291,7 +295,7 @@ namespace Geex {
 		delete impl_;
 	}
 
-	void Delaunay_CGAL::set_vertices(unsigned int n, const double* xyz) {
+	void Delaunay_CGAL::set_vertices(const unsigned int n, const double* xyz) {
 		vertices_ = xyz;
 		nb_vertices_ = n;
 		impl_->clear();
@@ -299,7 +303,7 @@ namespace Geex {
 		unsigned int dbl_count = 0;
 
 
-		if ((int)impl_->vertices_.size() != n)
+		if (static_cast<int>(impl_->vertices_.size()) != n)
 			impl_->vertices_.resize(n);
 
 
@@ -308,7 +312,7 @@ namespace Geex {
 			v = impl_->insert(Implementation::Point(xyz[3 * i], xyz[3 * i + 1], xyz[3 * i + 2]));
 			if (v->id != -1) {
 				dbl_count++;
-				v = 0;
+				v = nullptr;
 			}
 			else {
 				v->id = i;
@@ -317,7 +321,7 @@ namespace Geex {
 		}
 
 		if (dbl_count > 0) {
-			std::cerr << "Delaunay Warning: encountered " << dbl_count << " duplicated vertices" << std::endl;
+			WARNING("Delaunay Warning: encountered " << dbl_count << " duplicated vertices");
 		}
 
 		skeleton_dirty_ = true;

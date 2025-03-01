@@ -1,5 +1,5 @@
 //
-// This file is derived from LpCVT/main.cpp in the original code
+// This file is derived from LpCVT/main.cpp in the original code from https://xueyuhanlang.github.io
 // Created by Canjia Huang <canjia7@gmail.com> on 25-3-1.
 //
 
@@ -31,7 +31,7 @@ namespace Geex {
     /** Used by save_RDT(). **/
     class SavePrimalTriangle {
     public:
-        SavePrimalTriangle(std::ofstream& out): out_(&out) {}
+        explicit SavePrimalTriangle(std::ofstream& out): out_(&out) {}
 
         void operator()(unsigned int i, unsigned int j, unsigned int k) const {
             (*out_) << "f " << i + 1 << " " << j + 1 << " " << k + 1 << std::endl;
@@ -47,7 +47,7 @@ namespace Geex {
     /** used by save_RVD() **/
     class SaveRVDFacets {
     public:
-        SaveRVDFacets(std::ostream& out) : out_(out), cur_v_(1), cur_f_(1) {
+        explicit SaveRVDFacets(std::ostream& out) : out_(out), cur_v_(1), cur_f_(1) {
             out << "# attribute chart facet integer" << std::endl;
         }
         void operator()(unsigned int iv, Mesh* M) const;
@@ -86,4 +86,4 @@ namespace Geex {
         const std::string& output_path);
 }
 
-#endif //GEEX_IO_H
+#endif //GEEX_TEST_COMBINATORICS_H

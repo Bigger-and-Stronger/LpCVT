@@ -1,5 +1,5 @@
 //
-// This file is derived from LpCVT/main.cpp in the original code
+// This file is derived from LpCVT/main.cpp in the original code from https://xueyuhanlang.github.io
 // Created by Canjia Huang <canjia7@gmail.com> on 25-3-1.
 //
 
@@ -8,9 +8,10 @@
 #include "LpCVT/others/macro.h"
 
 namespace Geex {
-	void MemorizeIndices::operator() (const unsigned int i, int j,
-			const VertexEdge& v1, const VertexEdge& v2, const VertexEdge& v3
-			) const {
+	void MemorizeIndices::operator() (
+		const unsigned int i, int j,
+		const VertexEdge& v1, const VertexEdge& v2, const VertexEdge& v3
+		) const {
 		I.push_back(i);
 		I.push_back(v1.sym[2]); I.push_back(v1.sym[1]); I.push_back(v1.sym[0]);
 		I.push_back(v2.sym[2]); I.push_back(v2.sym[1]); I.push_back(v2.sym[0]);
@@ -18,9 +19,10 @@ namespace Geex {
 		C.push_back(v1); C.push_back(v2); C.push_back(v3);
 	}
 
-	void MemorizeIndicesAndFacets::operator() (const unsigned int i,
-			const VertexEdge& v1, const VertexEdge& v2, const VertexEdge& v3
-			) const {
+	void MemorizeIndicesAndFacets::operator() (
+		const unsigned int i,
+		const VertexEdge& v1, const VertexEdge& v2, const VertexEdge& v3
+		) const {
 		I.push_back(i);
 		I.push_back(v1.sym[2]); I.push_back(v1.sym[1]); I.push_back(v1.sym[0]);
 		I.push_back(v2.sym[2]); I.push_back(v2.sym[1]); I.push_back(v2.sym[0]);
@@ -49,7 +51,7 @@ namespace Geex {
 
 	void compute_F_g(
 		Mesh* m, const std::vector<vec3>& pts,
-		unsigned int p, const bool volume
+		const unsigned int p, const bool volume
 		) {
 		VERBOSE("nb pts = " << pts.size() << "   nb facets = " << m->nb_facets());
 		std::vector<int> I;
@@ -58,10 +60,10 @@ namespace Geex {
 		get_combinatorics(m, pts, I, C, F, volume);
 		const unsigned int nb_integration_simplices = static_cast<unsigned int>(I.size()) / 10;
 		std::vector<mat3> M(nb_integration_simplices);
-		for (unsigned int i = 0; i < M.size(); ++i) {
-			M[i].load_identity();
+		for (auto & i : M) {
+			i.load_identity();
 			// or replace with anisotropy field
-			//   In 2D: use F[i] to retreive the index of the facet that contains
+			//   In 2D: use F[i] to retrieve the index of the facet that contains
 			//      the current integration simplex (and access an array of per-facet anisotropy).
 			//   In 3D: use geometric search from the centroid of the current
 			//      integration simplex.
@@ -73,8 +75,8 @@ namespace Geex {
 		std::vector<double> g(pts.size() * 3);
 		double f = compute_F_Lp(volume, p, m, I, C, pts, Q, M, g);
 		double gnorm = 0.0;
-		for (unsigned int i = 0; i < g.size(); ++i)
-			gnorm += g[i] * g[i];
+		for (double i : g)
+			gnorm += i * i;
 
 		gnorm = ::sqrt(gnorm);
 		std::cout.precision(16);
@@ -96,6 +98,7 @@ namespace Geex {
             VERBOSE("========== volume LpCVT test ======");
             compute_F_g(&M, pts, 4, true);
         }
+
         VERBOSE("========== surface LpCVT test ======");
         compute_F_g(&M, pts, 4, false);
     }

@@ -1,12 +1,39 @@
 # LpCVT
 
-a copy from https://xueyuhanlang.github.io/
+This repo is a reorganization of the source code of the paper "**Lp Centroidal Voronoi Tessellation and its applications**". [[Paper]](https://dl.acm.org/doi/abs/10.1145/1778765.1778856)
 
-I am trying to make it more useful...
+The original source code is from https://xueyuhanlang.github.io, and the code has undergone some modifications by [secantalpha](https://github.com/secantalpha) to make it compatible with CGAL 5.0 or a later version. And this repo is based on the version [secantalpha/LpCVT](https://github.com/secantalpha/LpCVT).
 
-# :grey_exclamation: Requirements / dependencies
+:bulb: What did I do?
+- The data files have been reorganized to make this project lighter.
+- Parts of the code have been rearranged and reorganized.
 
-- CGAL (>= 5.0)
+If you use this code, you may need to cite:
+
+```
+@article{10.1145/1778765.1778856,
+    author = {L\'{e}vy, Bruno and Liu, Yang},
+    title = {Lp Centroidal Voronoi Tessellation and its applications},
+    year = {2010},
+    issue_date = {July 2010},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    volume = {29},
+    number = {4},
+    issn = {0730-0301},
+    url = {https://doi.org/10.1145/1778765.1778856},
+    doi = {10.1145/1778765.1778856},
+    month = jul,
+    articleno = {119},
+    numpages = {11},
+    keywords = {Centroidal Voronoi Tessellation, anisotropic meshing, hex-dominant meshing, quad-dominant meshing}
+}
+```
+
+# :link: Requirements / dependencies
+
+- [Boost](https://www.boost.org)
+- [CGAL](https://www.cgal.org/index.html) (version >= 5.0)
 
 # :checkered_flag: Getting started
 
@@ -15,6 +42,8 @@ git clone https://github.com/Bigger-and-Stronger/LpCVT.git
 ```
 
 # :hammer: Build (using CMake)
+
+In Windows
 
 In macOS
 ```
@@ -25,5 +54,7 @@ make
 ```
 
 # :computer: Usage
+
+# :children_crossing: Add to your code
 
 # :bar_chart: Output

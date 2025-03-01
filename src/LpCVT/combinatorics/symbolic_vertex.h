@@ -43,6 +43,8 @@
  *
  */
 
+// This code has been modified by Canjia Huang <canjia7@gmail.com> on 25-3-1.
+
 #ifndef __GEEX_CVT_SYMBOLIC_VERTEX__
 #define __GEEX_CVT_SYMBOLIC_VERTEX__
 
@@ -167,7 +169,7 @@ namespace Geex {
         }
         vec3Sym(const vec3& v) : vec3(v) { }
         vec3Sym() { }
-        SymbolicVertex sym ;
+        SymbolicVertex sym ; // SymbolicVertex
     } ;
 
 }

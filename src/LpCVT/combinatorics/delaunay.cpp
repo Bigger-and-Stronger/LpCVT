@@ -43,6 +43,10 @@
  *
  */
 
+// This code has been modified by Canjia Huang <canjia7@gmail.com> on 25-3-1.
+
+#include "LpCVT/others/macro.h"
+
 #include <LpCVT/combinatorics/delaunay.h>
 #include <LpCVT/combinatorics/delaunay_CGAL.h>
 
@@ -50,18 +54,18 @@
 namespace Geex {
 
     Delaunay::Delaunay() : skeleton_dirty_(false), nb_vertices_(0) {
-        vertices_ = 0 ;
+        vertices_ = nullptr ;
     }
     
-    Delaunay::~Delaunay() { }
+    Delaunay::~Delaunay() = default;
 
     Delaunay* Delaunay::create(const std::string& name) {
-		std::cerr << "Creating Delaunay implementation, using " << name << std::endl ;
-        if(name == "CGAL") {
+		VERBOSE("Creating Delaunay implementation, using " << name);
+        if(name == "CGAL")
             return new Delaunay_CGAL ;
-        } else {
-            std::cerr << name << ": no such Delaunay implementation." << std::endl ;
-            return 0 ;
+        else {
+            WARNING(name << ": no such Delaunay implementation.");
+            return nullptr ;
         }
     }
 
