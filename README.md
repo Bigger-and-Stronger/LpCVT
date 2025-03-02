@@ -2,13 +2,9 @@
 
 This repo is a reorganization of the source code of the paper "**Lp Centroidal Voronoi Tessellation and its applications**". [[Paper]](https://dl.acm.org/doi/abs/10.1145/1778765.1778856)
 
-The original source code is from https://xueyuhanlang.github.io, and the code has undergone some modifications by [secantalpha](https://github.com/secantalpha) to make it compatible with CGAL 5.0 or a later version. And this repo is based on the version [secantalpha/LpCVT](https://github.com/secantalpha/LpCVT).
+The original source code is from https://xueyuhanlang.github.io, and the code has been rearranged by [secantalpha](https://github.com/secantalpha), with some modifications made to ensure compatibility with CGAL 5.0 or a later version. The code of this repo is based on the version [secantalpha/LpCVT](https://github.com/secantalpha/LpCVT).
 
-:bulb: What did I do?
-- The data files have been reorganized to make this project lighter.
-- Parts of the code have been rearranged and reorganized.
-
-If you use this code, you may need to cite:
+If you use this code, you may need to cite the paper:
 
 ```
 @article{10.1145/1778765.1778856,
@@ -30,6 +26,10 @@ If you use this code, you may need to cite:
 }
 ```
 
+# :bulb: What did I do?
+- The data files have been reorganized to make this project lighter.
+- Parts of the code have been rearranged and reorganized.
+
 # :link: Requirements / dependencies
 
 - [Boost](https://www.boost.org)
@@ -41,7 +41,7 @@ If you use this code, you may need to cite:
 git clone https://github.com/Bigger-and-Stronger/LpCVT.git
 ```
 
-# :hammer: Build (using CMake)
+# :hammer: Build
 
 In Windows
 
@@ -55,6 +55,6 @@ make
 
 # :computer: Usage
 
-# :children_crossing: Add to your code
-
 # :bar_chart: Output
+
+# :children_crossing: Add to your code
