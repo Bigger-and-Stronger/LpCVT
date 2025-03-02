@@ -10,11 +10,22 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
+      
+      - name: Install dependencies
+        run: |
+          brew update
+          brew install boost
+          brew install cgal
+          
       - name: configure
+        env:
+          CC: gcc-11
+          CXX: g++-11
         run: |
           mkdir build
           cd build
           cmake ..
+          
       - name: build
         run: |
           cd build
