@@ -9,6 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(boost REQUIRED)
 find_package(CGAL 5.0 QUIET REQUIRED COMPONENTS Core)
 find_package(Eigen3 REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR})
 
 file(GLOB_RECURSE SOURCES 
     ${PROJECT_SOURCE_DIR}/src/LpCVT/*.h
@@ -18,10 +19,10 @@ add_executable(LpCVT ${SOURCES})
 
 target_include_directories(LpCVT PRIVATE ${PROJECT_SOURCE_DIR}/src)
 target_include_directories(LpCVT PRIVATE ${PROJECT_SOURCE_DIR}/external)
+target_include_directories(LpCVT PRIVATE ${PROJECT_SOURCE_DIR}/external/LBFGSpp)
 target_include_directories(LpCVT PRIVATE ${GMP_INCLUDE_DIR})
 
 target_link_libraries(LpCVT PRIVATE CGAL::CGAL)
-target_link_libraries(LpCVT PRIVATE ${Eigen3_LIBRARIES})
 
 IF(NOT ${APPLE})
     set(GMP_DLL "${GMP_INCLUDE_DIR}/../lib/libgmp-10.dll")

@@ -43,6 +43,8 @@
  *
  */
 
+// This code has been modified by Canjia Huang <canjia7@gmail.com> on 25-3-2.
+
 #ifndef __GEEX_MATHEMATICS_MATRIX__
 #define __GEEX_MATHEMATICS_MATRIX__
 
@@ -91,11 +93,9 @@ namespace Geex {
         FT* data() { return &(coeff_[0][0]) ; }
 
         void get_lower_triangle(FT* store) {
-            for(unsigned int i=0; i<DIM; i++) {
-                for(unsigned int j=0; j<=i; j++) {
+            for (unsigned int i = 0; i < DIM; ++i)
+                for(unsigned int j = 0; j <= i; ++j)
                     *store++ = coeff_[i][j] ;
-                }
-            }
         }
 
     private:
@@ -293,9 +293,9 @@ namespace Geex {
 
     template <class FT, int N> inline void
     Matrix<FT,N>::mult(const FT* x, FT* y) const {
-        for(int i=0; i<N; i++) {
+        for(int i=0; i<N; ++i) {
             y[i] = 0 ;
-            for(int j=0; j<N; j++) {
+            for(int j=0; j<N; ++j) {
                 y[i] += (*this)(i,j)*x[j] ;
             }
         }

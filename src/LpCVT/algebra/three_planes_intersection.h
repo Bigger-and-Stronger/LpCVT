@@ -43,6 +43,8 @@
  *
  */
 
+// This code has been modified by Canjia Huang <canjia7@gmail.com> on 25-3-2.
+
 #ifndef __THREE_PLANES_INTERSECTION_H__
 #define __THREE_PLANES_INTERSECTION_H__
 
@@ -61,7 +63,7 @@ namespace Geex {
 
         // Configuration (D) (yellow vertices in Figure 4)
         void set(
-            unsigned int i0_in, unsigned int i1_in, unsigned int i2_in, unsigned int i3_in
+            const unsigned int i0_in, const unsigned int i1_in, const unsigned int i2_in, const unsigned int i3_in
         ) {
             i0 = i0_in; i1 = i1_in ; i2 = i2_in ; i3 = i3_in ; nb_bisectors = 3 ;
             compute_W(X[i1]-X[i0], X[i2]-X[i0], X[i3]-X[i0]) ; 
@@ -76,7 +78,7 @@ namespace Geex {
         
         // Configuration (D) (yellow vertices in Figure 4), C given directly
         void set(
-            unsigned int i0_in, unsigned int i1_in, unsigned int i2_in, unsigned int i3_in,
+            const unsigned int i0_in, const unsigned int i1_in, const unsigned int i2_in, const unsigned int i3_in,
             const vec3& C_in
         ) {
             i0 = i0_in; i1 = i1_in ; i2 = i2_in ; i3 = i3_in ; nb_bisectors = 3 ;
@@ -87,7 +89,7 @@ namespace Geex {
 
         
         // Configuration (C) (red vertices in Figure 4,6)
-        void set(unsigned int i0_in, unsigned int i1_in, unsigned int i2_in, const plane3& Q1) {
+        void set(const unsigned int i0_in, const unsigned int i1_in, const unsigned int i2_in, const plane3& Q1) {
             i0 = i0_in; i1 = i1_in ; i2 = i2_in ; nb_bisectors = 2 ;
             compute_W(X[i1]-X[i0], X[i2]-X[i0], Q1.normal()) ; 
             double p02 = X[i0].length2() ;
@@ -100,7 +102,7 @@ namespace Geex {
 
         // Configuration (C) (red vertices in Figure 4,6), C given directly
         void set(
-            unsigned int i0_in, unsigned int i1_in, unsigned int i2_in, const plane3& Q1,
+            const unsigned int i0_in, const unsigned int i1_in, const unsigned int i2_in, const plane3& Q1,
             const vec3& C_in
         ) {
             i0 = i0_in; i1 = i1_in ; i2 = i2_in ; nb_bisectors = 2 ;
@@ -183,7 +185,7 @@ namespace Geex {
             W2.z *= Tinv ;
         }
 
-        void compute_C(double Dx, double Dy, double Dz) {
+        void compute_C(const double Dx, const double Dy, const double Dz) {
             C.x = Dx * W0.x + Dy * W1.x + Dz * W2.x ;
             C.y = Dx * W0.y + Dy * W1.y + Dz * W2.y ;
             C.z = Dx * W0.z + Dy * W1.z + Dz * W2.z ;

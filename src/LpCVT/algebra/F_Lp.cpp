@@ -43,6 +43,7 @@
  *
  */
 
+// This code has been modified by Canjia Huang <canjia7@gmail.com> on 25-3-2.
 
 #include <LpCVT/algebra/F_Lp.h>
 #include <LpCVT/algebra/voro_func.h>
@@ -289,9 +290,9 @@ namespace Geex {
         const std::vector<mat3>& M,    // IN: anisotropy matrix (one per integration simplex)
         std::vector<double>& g         // OUT: gradient
     ) {
-        unsigned int nb = sym.size() / 10 ;
-        assert(sym.size() == nb*10) ;
-        assert(C.size() == nb*3) ;
+        const unsigned int nb = sym.size() / 10 ;
+        assert(sym.size() == nb * 10) ;
+        assert(C.size() == nb * 3) ;
         return compute_F_Lp_internal(
             volumic, p, mesh, nb,
             &sym[0], &C[0], X, Q, M, g
