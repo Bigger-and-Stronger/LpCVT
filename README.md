@@ -1,4 +1,5 @@
 # LpCVT
+![MacOS](https://github.com/Bigger-and-Stronger/LpCVT/actions/workflows/macos-build.yml/badge.svg)
 
 This repo is a reorganization of the source code of the paper "**Lp Centroidal Voronoi Tessellation and its applications**". [[Paper]](https://dl.acm.org/doi/abs/10.1145/1778765.1778856)
 
