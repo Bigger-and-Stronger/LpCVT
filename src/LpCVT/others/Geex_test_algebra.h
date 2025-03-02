@@ -22,40 +22,6 @@
 #include <LpCVT/algebra/F_Lp.h>
 
 namespace Geex {
-	/** Used by get_combinatorics() in volume mode **/
-	class MemorizeIndices {
-	public:
-		MemorizeIndices(std::vector<int>& I_in, std::vector<vec3>& C_in) : I(I_in), C(C_in) {
-			std::vector<int>().swap(I);
-			std::vector<vec3>().swap(C);
-		}
-
-		void operator() (unsigned int i, int j,
-			const VertexEdge& v1, const VertexEdge& v2, const VertexEdge& v3) const;
-	private:
-		std::vector<int>& I;
-		std::vector<vec3>& C;
-	};
-
-	/** Used by get_combinatorics() in surface mode **/
-	class MemorizeIndicesAndFacets {
-	public:
-		MemorizeIndicesAndFacets(const RestrictedVoronoiDiagram& RVD_in,
-			std::vector<int>& I_in, std::vector<vec3>& C_in, std::vector<int>& F_in) : RVD(RVD_in), I(I_in), C(C_in), F(F_in) {
-			std::vector<int>().swap(I);
-			std::vector<vec3>().swap(C);
-			std::vector<int>().swap(F);
-		}
-
-		void operator() (unsigned int i,
-			const VertexEdge& v1, const VertexEdge& v2, const VertexEdge& v3) const;
-	private:
-		const RestrictedVoronoiDiagram& RVD;
-		std::vector<int>& I;
-		std::vector<vec3>& C;
-		std::vector<int>& F;
-	};
-
 	/** Gets the combinatorics of the integration simplices,
 	 * i.e. 10 integers per integration simplex.
 	 * (see Section 3.1 in the paper)
@@ -72,7 +38,8 @@ namespace Geex {
 	/** Computes F_{L_p} and its gradient. **/
 	void compute_F_g(
 		Mesh* m, const std::vector<vec3>& pts,
-		unsigned int p, bool volume);
+		unsigned int p,
+		bool volume);
 
 	void test_algebra(const std::string& mesh_filename, const std::string& pts_filename);
 }

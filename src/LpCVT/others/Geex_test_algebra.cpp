@@ -8,35 +8,65 @@
 #include "LpCVT/others/macro.h"
 
 namespace Geex {
-	void MemorizeIndices::operator() (
-		const unsigned int i, int j,
-		const VertexEdge& v1, const VertexEdge& v2, const VertexEdge& v3
-		) const {
-		I.push_back(i);
-		I.push_back(v1.sym[2]); I.push_back(v1.sym[1]); I.push_back(v1.sym[0]);
-		I.push_back(v2.sym[2]); I.push_back(v2.sym[1]); I.push_back(v2.sym[0]);
-		I.push_back(v3.sym[2]); I.push_back(v3.sym[1]); I.push_back(v3.sym[0]);
-		C.push_back(v1); C.push_back(v2); C.push_back(v3);
-	}
+	/** Used by get_combinatorics() in volume mode **/
+	class MemorizeIndices {
+	public:
+		MemorizeIndices(std::vector<int>& I_in, std::vector<vec3>& C_in) : I(I_in), C(C_in) {
+			std::vector<int>().swap(I);
+			std::vector<vec3>().swap(C);
+		}
 
-	void MemorizeIndicesAndFacets::operator() (
-		const unsigned int i,
-		const VertexEdge& v1, const VertexEdge& v2, const VertexEdge& v3
-		) const {
-		I.push_back(i);
-		I.push_back(v1.sym[2]); I.push_back(v1.sym[1]); I.push_back(v1.sym[0]);
-		I.push_back(v2.sym[2]); I.push_back(v2.sym[1]); I.push_back(v2.sym[0]);
-		I.push_back(v3.sym[2]); I.push_back(v3.sym[1]); I.push_back(v3.sym[0]);
-		F.push_back(RVD.current_facet());
-		C.push_back(v1); C.push_back(v2); C.push_back(v3);
-	}
+		void operator() (
+			const unsigned int i, int j,
+			const VertexEdge& v1, const VertexEdge& v2, const VertexEdge& v3
+			) const {
+			I.push_back(i);
+			I.push_back(v1.sym[2]); I.push_back(v1.sym[1]); I.push_back(v1.sym[0]);
+			I.push_back(v2.sym[2]); I.push_back(v2.sym[1]); I.push_back(v2.sym[0]);
+			I.push_back(v3.sym[2]); I.push_back(v3.sym[1]); I.push_back(v3.sym[0]);
+			C.push_back(v1); C.push_back(v2); C.push_back(v3);
+		}
+	private:
+		std::vector<int>& I;
+		std::vector<vec3>& C;
+	};
+
+	/** Used by get_combinatorics() in surface mode **/
+	class MemorizeIndicesAndFacets {
+	public:
+		MemorizeIndicesAndFacets(const RestrictedVoronoiDiagram& RVD_in,
+			std::vector<int>& I_in, std::vector<vec3>& C_in, std::vector<int>& F_in) : RVD(RVD_in), I(I_in), C(C_in), F(F_in) {
+			std::vector<int>().swap(I);
+			std::vector<vec3>().swap(C);
+			std::vector<int>().swap(F);
+		}
+
+		void operator() (
+			const unsigned int i,
+			const VertexEdge& v1, const VertexEdge& v2, const VertexEdge& v3
+			) const {
+			I.push_back(i);
+			I.push_back(v1.sym[2]); I.push_back(v1.sym[1]); I.push_back(v1.sym[0]);
+			I.push_back(v2.sym[2]); I.push_back(v2.sym[1]); I.push_back(v2.sym[0]);
+			I.push_back(v3.sym[2]); I.push_back(v3.sym[1]); I.push_back(v3.sym[0]);
+			F.push_back(RVD.current_facet());
+			C.push_back(v1); C.push_back(v2); C.push_back(v3);
+		}
+	private:
+		const RestrictedVoronoiDiagram& RVD;
+		std::vector<int>& I;
+		std::vector<vec3>& C;
+		std::vector<int>& F;
+	};
 
 	void get_combinatorics(
 		Mesh* M, const std::vector<vec3>& pts,
-		std::vector<int>& I, std::vector<vec3>& C, std::vector<int>& F, const bool volume
+		std::vector<int>& I, std::vector<vec3>& C, std::vector<int>& F,
+		const bool volume
 	) {
 		Delaunay* delaunay = Delaunay::create("CGAL");
 		delaunay->set_vertices(pts);
+
 		if (volume) {
 			ClippedVoronoiDiagram CVD(delaunay, M);
 			CVD.for_each_triangle(MemorizeIndices(I, C));
@@ -51,7 +81,8 @@ namespace Geex {
 
 	void compute_F_g(
 		Mesh* m, const std::vector<vec3>& pts,
-		const unsigned int p, const bool volume
+		const unsigned int p,
+		const bool volume
 		) {
 		VERBOSE("nb pts = " << pts.size() << "   nb facets = " << m->nb_facets());
 		std::vector<int> I;
@@ -73,16 +104,18 @@ namespace Geex {
 			Q[i] = m->facet_plane(i);
 
 		std::vector<double> g(pts.size() * 3);
-		double f = compute_F_Lp(volume, p, m, I, C, pts, Q, M, g);
+		const double f = compute_F_Lp(volume, p, m, I, C, pts, Q, M, g);
 		double gnorm = 0.0;
-		for (double i : g)
+		for (const double i : g)
 			gnorm += i * i;
 
 		gnorm = ::sqrt(gnorm);
 		std::cout.precision(16);
-		VERBOSE((volume ? "volume " : "surface ")
+		VERBOSE(
+			(volume ? "volume " : "surface ")
 			<< "F_L" << p << ":"
-			<< "f=" << std::scientific << f << "  g=" << gnorm);
+			<< "f=" << std::scientific << f << "  g=" << gnorm
+			);
 	}
 
     void test_algebra(
@@ -95,11 +128,11 @@ namespace Geex {
             return;
 
         if (nb_borders == 0) {
-            VERBOSE("========== volume LpCVT test ======");
+            VERBOSE("========== volume LpCVT test ==========");
             compute_F_g(&M, pts, 4, true);
         }
 
-        VERBOSE("========== surface LpCVT test ======");
+        VERBOSE("========== surface LpCVT test ==========");
         compute_F_g(&M, pts, 4, false);
     }
 }

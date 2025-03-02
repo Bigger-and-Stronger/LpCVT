@@ -16,6 +16,7 @@ jobs:
           brew update
           brew install boost
           brew install cgal
+          brew install eigen
           
       - name: configure
         run: |

@@ -43,13 +43,14 @@
  *
  */
 
+// This code has been modified by Canjia Huang <canjia7@gmail.com> on 25-3-2.
+
 #ifndef __INTEGRATION_SIMPLEX_H__
 #define __INTEGRATION_SIMPLEX_H__
 
 #include <LpCVT/algebra/measure.h>
 
 namespace Geex {
-
     /**
      * Computes F_{L_p}^T and its gradients.
      * See Appendices A and B.1 in the paper.
@@ -82,7 +83,7 @@ namespace Geex {
             // (see Appendix B.1)
             {
                 unsigned int cur_dU1=0, cur_dU2=0, cur_dU3=0 ;
-                for(unsigned int alpha=0; alpha<=P; alpha++) {
+                for(unsigned int alpha=0; alpha<=P; alpha++)
                     for(unsigned int beta=0; beta<=P-alpha; beta++) {
                         unsigned int gamma = P-alpha-beta ;
                         if(alpha != 0) {
@@ -104,7 +105,6 @@ namespace Geex {
                             cur_dU3++ ;
                         }
                     }
-                }                
             }
             U_pow[0][0] = vec3(1.0, 1.0, 1.0) ;
             U_pow[1][0] = vec3(1.0, 1.0, 1.0) ;
@@ -125,7 +125,7 @@ namespace Geex {
                 matvecmul(M, U, U_pow[2][1]) ;
             }
 
-            for(unsigned int i=2; i<=P; i++) {
+            for (unsigned int i = 2; i <= P; ++i) {
                 vecmul(U_pow[0][1], U_pow[0][i-1], U_pow[0][i]) ;
                 vecmul(U_pow[1][1], U_pow[1][i-1], U_pow[1][i]) ;
                 vecmul(U_pow[2][1], U_pow[2][i-1], U_pow[2][i]) ;
@@ -133,7 +133,7 @@ namespace Geex {
 
             // Computation of function value.
             double E = 0.0 ;
-            for(unsigned int i=0; i<nb_coeffs; i++) {
+            for (unsigned int i = 0; i < nb_coeffs; ++i) {
                 vec3 W ;
                 unsigned int alpha = E_pow[i][0] ;
                 unsigned int beta  = E_pow[i][1] ;
@@ -144,7 +144,7 @@ namespace Geex {
 
             // Computation of gradient
             vec3 dEdU1(0,0,0), dEdU2(0,0,0), dEdU3(0,0,0) ;
-            for(unsigned int i=0; i<nb_dcoeffs; i++) {
+            for (unsigned int i = 0; i < nb_dcoeffs; ++i) {
                 {
                     unsigned int alpha = dE_pow[0][i][0] ;
                     unsigned int beta  = dE_pow[0][i][1] ;
@@ -169,7 +169,7 @@ namespace Geex {
             // Compute tet measure and its 
             // derivatives relative to U1, U2 and U3. 
             vec3 dTdU1, dTdU2, dTdU3 ;
-            double T = measure_(
+            const double T = measure_(
                 U_pow[0][1], U_pow[1][1], U_pow[2][1],
                 dTdU1, dTdU2, dTdU3
             ) ;

@@ -59,7 +59,7 @@ namespace Geex {
      */
     class TetVolume {
     public:
-        TetVolume() { }
+        TetVolume() = default;
         double operator()(
             const vec3& U1, const vec3& U2, const vec3& U3,
             vec3& dTdU1, vec3& dTdU2, vec3& dTdU3
@@ -78,7 +78,7 @@ namespace Geex {
      */
     class TriArea {
     public:
-        TriArea() { }
+        TriArea() = default;
         double operator()(
             const vec3& U1, const vec3& U2, const vec3& U3,
             vec3& dTdU1, vec3& dTdU2, vec3& dTdU3

@@ -15,20 +15,33 @@
 
 #include "LpCVT/others/Geex_test_combinatorics.h"
 #include "LpCVT/others/Geex_test_algebra.h"
+#include "LpCVT/others/functional.h"
+#include "LpCVT/others/IO.h"
 #include "LpCVT/others/macro.h"
 
 #include <LpCVT/combinatorics/delaunay.h>
 
 int main() {
 	const std::string input_model_name = "three_holes";
-	const std::string input_mesh_path = "../data/" + input_model_name + ".obj";
-	const std::string input_pts_path = "../data/" + input_model_name + ".pts";
+	const std::string input_mesh_path = "../data/three_holes.obj";
+	const std::string input_pts_path = "../data/test_sample_pts.obj";
 
-	VERBOSE("============= geometry->combinatorics test ==========");
+	// generate random sample pts
+	if constexpr (false) {
+		Geex::Mesh mesh;
+		mesh.load(input_mesh_path);
+		std::vector<Geex::vec3> pts;
+		Geex::sample_mesh_pts(mesh, pts, 5000);
+		Geex::write_pts("../data/test_sample_pts.obj", pts);
+	}
+
+	VERBOSE("============= geometry -> combinatorics test ==========");
 	Geex::test_combinatorics(input_mesh_path, input_pts_path, "../data/");
-	//VERBOSE("============= combinatorics->algebra test  ==========");
-	//VERBOSE("(note: expect large values for f and g)");
-	//Geex::test_algebra(input_model_name, input_pts_path);
+	std::cout << std::endl;
+	VERBOSE("============= combinatorics -> algebra test  ==========");
+	VERBOSE("(note: expect large values for f and g)");
+	Geex::test_algebra(input_mesh_path, input_pts_path);
+	return 1;
 }
 
 /*

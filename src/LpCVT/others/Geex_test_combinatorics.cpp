@@ -33,6 +33,20 @@ namespace Geex {
 		return true;
 	}
 
+	// ------------------------------ RDT ------------------------------
+	/** Used by save_RDT(). **/
+	class SavePrimalTriangle {
+	public:
+		explicit SavePrimalTriangle(std::ofstream& out): out_(&out) {}
+
+		void operator()(const unsigned int i, const unsigned int j, const unsigned int k
+			) const {
+			(*out_) << "f " << i + 1 << " " << j + 1 << " " << k + 1 << std::endl;
+		}
+	private:
+		std::ofstream* out_;
+	};
+
 	void save_RDT(
 		RestrictedVoronoiDiagram& RVD, const std::string& filename
 		) {
@@ -45,24 +59,33 @@ namespace Geex {
 		out.close();
 	}
 
-	void SaveRVDFacets::operator()(
-		const unsigned int iv, Mesh* M
-		) const {
-		for (unsigned int f = 0; f < M->nb_facets(); f++) {
-			for (unsigned int i = M->facet_begin(f); i < M->facet_end(f); i++) {
-				const vec3& v = M->vertex(i);
-				out_ << "v " << v << std::endl;
-			}
-			out_ << "f ";
-			for (unsigned int i = M->facet_begin(f); i < M->facet_end(f); i++) {
-				out_ << cur_v_ << " ";
-				++cur_v_;
-			}
-			out_ << std::endl;
-			out_ << "# attrs f " << cur_f_ << " " << iv << std::endl;
-			++cur_f_;
+	// ------------------------------ RVD ------------------------------
+	/** used by save_RVD() **/
+	class SaveRVDFacets {
+	public:
+		explicit SaveRVDFacets(std::ostream& out) : out_(out), cur_v_(1), cur_f_(1) {
+			out << "# attribute chart facet integer" << std::endl;
 		}
-	}
+		void operator()(const unsigned int iv, Mesh* M
+			) const {
+			for (unsigned int f = 0; f < M->nb_facets(); f++) {
+				for (unsigned int i = M->facet_begin(f); i < M->facet_end(f); ++i) {
+					const vec3& v = M->vertex(i);
+					out_ << "v " << v << std::endl;
+				}
+				out_ << "f ";
+				for (unsigned int i = M->facet_begin(f); i < M->facet_end(f); ++i) {
+					out_ << cur_v_++ << " ";
+				}
+				out_ << std::endl;
+				out_ << "# attrs f " << cur_f_++ << " " << iv << std::endl;
+			}
+		}
+	private:
+		std::ostream& out_;
+		mutable unsigned int cur_v_; // vertex cnt
+		mutable unsigned int cur_f_; // face cnt
+	};
 
 	void save_RVD(
 		RestrictedVoronoiDiagram& RVD, const std::string& filename
@@ -72,13 +95,15 @@ namespace Geex {
 			WARNING("could not open " << filename);
 			return;
 		}
-		VERBOSE("Computing and saving RVD");
-		bool sym_backup = RVD.symbolic();
+
+		VERBOSE("Computing and saving RVD to " << filename);
+		const bool sym_backup = RVD.symbolic();
 		RVD.set_symbolic(true);
 		RVD.for_each_facet(SaveRVDFacets(out));
 		RVD.set_symbolic(sym_backup);
-		VERBOSE("Saved RVD in " << filename);
 	}
+
+	// ------------------------------ CVD ------------------------------
 
 	void SaveClippedVDFacets::operator()(
 		const unsigned int i, int j, const vec3& p1, const vec3& p2, const vec3& p3
@@ -100,10 +125,11 @@ namespace Geex {
 			WARNING("could not open " << filename);
 			return;
 		}
-		VERBOSE("Computing and saving clipped VD");
+		VERBOSE("Computing and saving clipped VD to " << filename);
 		CVD.for_each_triangle(SaveClippedVDFacets(CVD.delaunay(), out, shrink));
-		VERBOSE("Saved clipped VD in " << filename);
 	}
+
+
 
 	void test_combinatorics(
 		const std::string& mesh_filename, const std::string& pts_filename,

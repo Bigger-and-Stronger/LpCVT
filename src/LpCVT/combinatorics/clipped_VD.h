@@ -43,6 +43,8 @@
  *
  */
 
+// This code has been modified by Canjia Huang <canjia7@gmail.com> on 25-3-2.
+
 #ifndef __GEEX_CVT_CLIPPED_VD__
 #define __GEEX_CVT_CLIPPED_VD__
 
@@ -203,53 +205,52 @@ namespace Geex {
          */
         template <class ACTION> void for_each_facet(const ACTION& action) {
             current_face_type_ = CVD_NONE ;
-            if(action.get_restricted_cells()) {
+            if (action.get_restricted_cells()) {
                 restricted_cells_.resize(RVD_.delaunay()->nb_vertices()) ;
-                for(unsigned int i=0; i<restricted_cells_.size(); i++) {
-                    restricted_cells_[i].clear() ;
-                }
+                for(auto & restricted_cell : restricted_cells_)
+                    restricted_cell.clear() ;
+
                 current_face_type_ = CVD_RVD ;
                 RVD_.for_each_facet(GetCellsBoundary<ACTION>(restricted_cells_, action)) ;
             }
-            if(traverse_inner_cells_) {
+            if (traverse_inner_cells_) {
                 cell_visited_.resize(RVD_.delaunay()->nb_vertices()) ;
                 cell_on_stack_.resize(RVD_.delaunay()->nb_vertices()) ;
                 std::fill(cell_visited_.begin(), cell_visited_.end(), false) ;
                 std::fill(cell_on_stack_.begin(), cell_on_stack_.end(), false) ;
             }
-            for(unsigned int iv=0; iv<RVD_.delaunay()->nb_vertices(); iv++) {
+            for (unsigned int iv = 0; iv < RVD_.delaunay()->nb_vertices(); ++iv) {
                 traverse_cell_ = action.process_cell(iv) ;
-                if(traverse_cell_ || traverse_inner_cells_) {
+                if (traverse_cell_ || traverse_inner_cells_) {
                     current_face_type_ = CVD_WALL ;
                     begin_cell(iv) ;
-                    for(VertexMap::iterator it = RVC_->begin() ; it != RVC_->end(); it++) {
-                        if(!it->second.visited) { 
-                            get_contour(it, action) ; 
-                        }
-                    }       
-                    for(unsigned int i=0; i<cell_.nb_facets(); i++) {
+                    for (VertexMap::iterator it = RVC_->begin() ; it != RVC_->end(); ++it)
+                        if(!it->second.visited)
+                            get_contour(it, action) ;
+
+                    for (unsigned int i = 0; i < cell_.nb_facets(); ++i) {
                         close_facet(i, action) ;
-                        if(facet_vertices_[i].size() > 0) {
+                        if (!facet_vertices_[i].empty()) {
                             unsigned int jv = cell_.facet_bisector(i) ;
                             facet_visited_.insert(jv) ;
-                            if(traverse_cell_) {
+
+                            if (traverse_cell_) {
                                 action.begin_facet(iv_, jv) ;
-                                for(unsigned int k=0; k<facet_vertices_[i].size(); k++) {
+                                for(unsigned int k=0; k<facet_vertices_[i].size(); ++k)
                                     action.vertex(facet_vertices_[i][k]) ;
-                                }
+
                                 action.end_facet() ;
                             }
                         }
                     }
-		    current_face_type_ = CVD_CLOSE ;
-  		    propagate_to_adjacent_facets(action) ;
-                    end_cell() ;
-                    if(traverse_inner_cells_) {
-                        cell_visited_[iv_] = (RVC_->size() > 0) ;
-                    }
+		            current_face_type_ = CVD_CLOSE ;
+  		            propagate_to_adjacent_facets(action) ;
+                            end_cell() ;
+                            if(traverse_inner_cells_)
+                                cell_visited_[iv_] = (RVC_->size() > 0) ;
                 }
             }
-            if(traverse_inner_cells_) {
+            if (traverse_inner_cells_) {
                 current_face_type_ = CVD_INSIDE ;
                 propagate_to_adjacent_cells(action) ;
             }
@@ -258,20 +259,17 @@ namespace Geex {
     protected:
 
         template <class ACTION> void propagate_to_adjacent_cells(const ACTION& action) {
-            while(!cell_S_.empty()) {
+            while (!cell_S_.empty()) {
                 iv_ = cell_S_.top() ;
                 cell_S_.pop() ;
-                if(
-                    !cell_visited_[iv_] 
-                ) {
+                if (!cell_visited_[iv_]) {
                     cell_visited_[iv_] = true ;
-                    if(action.process_cell(iv_)) {
+                    if (action.process_cell(iv_)) {
                         RVD_.delaunay()->get_voronoi_cell(iv_, cell_, geometry_) ;
-                        for(unsigned int fi=0; fi<cell_.nb_facets(); fi++) {
+                        for (unsigned int fi = 0; fi < cell_.nb_facets(); ++fi) {
                             apply_action_to_cell_facet(fi, action) ;
-                            if(cell_.facet_bisector(fi) >= 0) {
+                            if(cell_.facet_bisector(fi) >= 0)
                                 push_cell(cell_.facet_bisector(fi)) ;
-                            }
                         }
                     }
                 }
@@ -279,22 +277,20 @@ namespace Geex {
         }
 
         template <class ACTION> void propagate_to_adjacent_facets(const ACTION& action) {
-            while(!facet_S_.empty()) {
+            while (!facet_S_.empty()) {
                 unsigned int f = facet_S_.top() ; facet_S_.pop() ;
-                if(facet_visited_.find(f) == facet_visited_.end()) {
+                if (facet_visited_.find(f) == facet_visited_.end()) {
                     facet_visited_.insert(f) ;
                     unsigned int fi = cell_.find_facet(f) ;
-                    if(traverse_cell_) {
+                    if (traverse_cell_)
                         apply_action_to_cell_facet(fi, action) ;
-                    }
-                    if(traverse_inner_cells_) {
+                    if(traverse_inner_cells_)
                         push_cell(f) ;
-                    } 
-                    for(unsigned int i = cell_.facet_begin(fi); i<cell_.facet_end(fi); i++) {
-                        int g = cell_.edge_bisector(i) ;
-                        if(g >= 0 && facet_visited_.find(g) == facet_visited_.end()) {
+
+                    for (unsigned int i = cell_.facet_begin(fi); i<cell_.facet_end(fi); i++) {
+                        const int g = cell_.edge_bisector(i) ;
+                        if (g >= 0 && facet_visited_.find(g) == facet_visited_.end())
                             facet_S_.push(g) ;
-                        }
                     }
                 }
             }

@@ -43,8 +43,12 @@
  *
  */
 
+// This code has been modified by Canjia Huang <canjia7@gmail.com> on 25-3-2.
+
 #ifndef __GEEX_CVT_RVD__
 #define __GEEX_CVT_RVD__
+
+#include "LpCVT/others/macro.h"
 
 #include <LpCVT/combinatorics/mesh.h>
 #include <LpCVT/combinatorics/delaunay_skel.h>
@@ -105,17 +109,20 @@ namespace Geex {
     template <class T> class PrimalTriangleAction {
     public:
         PrimalTriangleAction(const T& do_it_in) : do_it(do_it_in) { }
-        void operator()(unsigned int iv1, Mesh* M) const {
-            for(unsigned int f=0; f<M->nb_facets(); f++) {
-                for(unsigned int i = M->facet_begin(f); i<M->facet_end(f); i++) {
+        void operator()(unsigned int iv1, Mesh* M
+            ) const {
+            for (unsigned int f = 0, f_end = M->nb_facets(); f < f_end; ++f) {
+                for (unsigned int i = M->facet_begin(f); i<M->facet_end(f); ++i) {
                     const VertexEdge& ve = M->vertex(i) ;
                     // Primal triangles correspond to vertices of
                     // the RVD that are on two bisectors.  
-                    unsigned int nb_bisect = ve.sym.nb_bisectors() ;
-                    if(nb_bisect >= 2) {
+                    const unsigned int nb_bisect = ve.sym.nb_bisectors() ;
+
+                    if (nb_bisect >= 2) {
                         bool found = false ;
-                        for(unsigned int k1=0; k1<nb_bisect-1 && !found; k1++) {
-                            for(unsigned int k2=k1+1; k2<nb_bisect && !found; k2++) {
+
+                        for (unsigned int k1 = 0; k1 < nb_bisect - 1 && !found; ++k1) {
+                            for(unsigned int k2 = k1 + 1; k2 < nb_bisect && !found; ++k2) {
                                 unsigned int iv2 = ve.sym.bisector(k1) ; 
                                 unsigned int iv3 = ve.sym.bisector(k2) ;
                                 // Make sure each triangle is generated once only
@@ -124,8 +131,8 @@ namespace Geex {
                                     // Check whether the orientation of the triangle is
                                     // consistent with the orientation of the facet. If
                                     // its not the case, swap iv2 and iv3
-                                    unsigned int j1 = M->prev_around_facet(f,i) ;
-                                    unsigned int j2 = M->next_around_facet(f,i) ;
+                                    const unsigned int j1 = M->prev_around_facet(f,i) ;
+                                    const unsigned int j2 = M->next_around_facet(f,i) ;
 
                                     const VertexEdge& ve2 = M->vertex(j1) ; 
                                     const VertexEdge& ve3 = M->vertex(j2) ;
@@ -133,7 +140,8 @@ namespace Geex {
                                     if(ve2.sym.has_bisector(iv2) && ve3.sym.has_bisector(iv3)) {
                                         do_it(iv1, iv2, iv3) ;
                                         found = true ;
-                                    } else if(ve2.sym.has_bisector(iv3) && ve3.sym.has_bisector(iv2)) {
+                                    }
+                                    else if(ve2.sym.has_bisector(iv3) && ve3.sym.has_bisector(iv2)) {
                                         do_it(iv1, iv3, iv2) ;
                                         found = true ;
                                     }
@@ -189,14 +197,14 @@ namespace Geex {
 
     public:
         RestrictedVoronoiDiagram() : 
-            visited_(0), visited_size_(0), m(0), delaunay_(0), symbolic_(false), exact_(false){ 
+            visited_(nullptr), visited_size_(0), m(nullptr), delaunay_(nullptr), symbolic_(false), exact_(false){
         }
         
-        RestrictedVoronoiDiagram(Delaunay* delaunay_in, Mesh* m_in) : 
-            visited_(0), visited_size_(0), m(m_in), delaunay_(delaunay_in), 
-            symbolic_(false), exact_(false) { 
+        RestrictedVoronoiDiagram(Delaunay* delaunay_in, Mesh* m_in) :
+            visited_(nullptr), visited_size_(0), m(m_in), delaunay_(delaunay_in),
+            symbolic_(false), exact_(false) {
         }
-        
+
         ~RestrictedVoronoiDiagram() { delete[] visited_ ; visited_ = 0 ; }
 
         // In symbolic mode, each generated vertex knows the ID's of the planes
@@ -223,74 +231,76 @@ namespace Geex {
         compute(
             Mesh* M, DEL* delaunay, const DelaunaySkeleton* skel, const ACTION& action
         ) {
-            current_mesh_ = 0 ;
+            current_mesh_ = nullptr ;
             init_visited(M) ;
-            for(unsigned int i=0; i<M->nb_facets(); i++) {
-                if(!M->facet_is_marked(i)) {
-                    unsigned int cell = find_seed_near_facet(delaunay, M, i) ;
-                    push(i,cell,false) ;
-                    while(!S.empty()) {
+            for (unsigned int i = 0, i_end = M->nb_facets(); i < i_end; ++i) {
+
+                if (!M->facet_is_marked(i)) {
+                    const unsigned int cell_nf = find_seed_near_facet(delaunay, M, i) ; // [Canjia Huang] a seed near the facet i in mesh M
+                    push(i, cell_nf, false) ;
+
+                    while (!S.empty()) {
                         Mesh* ping = &M1 ;
                         Mesh* pong = &M2 ;
-                        unsigned int f = S.top().f ;
+
+                        const unsigned int f = S.top().f ;
                         unsigned int cell = S.top().cell ;
+                        S.pop() ;
 
                         current_facet_ = f ;
 
-                        S.pop() ;
                         ping->clear() ;
                         M->copy_facet(f, *ping) ;
-                        
-                        // Compute triangle clipped by cell and
-                        // send neighbors to stack
+
+                        // Compute triangle clipped by cell and send neighbors to stack
                         clip_by_cell(skel, cell, ping, pong) ;
                         current_mesh_ = ping ;
                         // Apply action to triangles intersected by cell.
                         action(cell, ping) ;
-                        
-                        for(unsigned int i=0; i<ping->nb_vertices(); i++) {
-                            int neigh_f = ping->vertex(i).f ;
-                            if(neigh_f >= 0 && !M->facet_is_marked(neigh_f)) {
+
+                        // [Canjia Huang] Push incident not marked facets
+                        for (unsigned int j = 0, j_end = ping->nb_vertices(); j < j_end; ++j) {
+                            if (const int neigh_f = ping->vertex(j).f; neigh_f >= 0 && !M->facet_is_marked(neigh_f))
                                 push(neigh_f, cell) ;
-                            }
                         }
                     }
                 }
             }
 
             // Final cleanup: unmark all triangles
-            for(unsigned int f=0; f<M->nb_facets(); f++) {
-                M->unmark_facet(f) ;
-            }
-            current_mesh_ = 0 ;
+            for (unsigned int f = 0, f_end = M->nb_facets(); f < f_end; ++f)
+                M->unmark_facet(f);
+
+            current_mesh_ = nullptr ;
         }
 
         // ACTION needs to implement 
         //      operator()(unsigned int c, Mesh* M) const
         //   where c denotes the index of the current Voronoi cell (or Delaunay vertex).
-        template <class ACTION> inline void for_each_facet(const ACTION& action) {
-            if(exact_) {
+        template <class ACTION> inline void for_each_facet(const ACTION& action
+            ) {
+            if (exact_)
                 RVD_predicates::begin_stats() ;
-            }
+
             this->template compute<Delaunay, ACTION>(m, delaunay_, delaunay_->skeleton(), action) ;
-            if(exact_) {
+
+            if (exact_)
                 RVD_predicates::end_stats() ;
-            }
         }
 
         // ACTION needs to implement:
         //      operator()(unsigned int c, const VertexEdge& v1, v2, v3) const
         //   where c denotes the index of the current Voronoi cell (or Delaunay vertex).
         template <class TRIACTION> inline void for_each_triangle(const TRIACTION& action) {
-            if(exact_) {
+            if(exact_)
                 RVD_predicates::begin_stats() ;
-            }
+
             this->template compute<Delaunay, TriangleAction<TRIACTION> >(
                 m, delaunay_, delaunay_->skeleton(), TriangleAction<TRIACTION>(action)
             ) ;
-            if(exact_) {
+
+            if(exact_)
                 RVD_predicates::end_stats() ;
-            }
         }
 
         // ACTION needs to implement:
@@ -316,19 +326,20 @@ namespace Geex {
         template <class PRIMTRIACTION> inline void for_each_primal_triangle(
             const PRIMTRIACTION& action
         ) {
-            if(exact_) {
+            if(exact_)
                 RVD_predicates::begin_stats() ;
-            }
+
             // PrimalTriangleAction needs symbolic mode
-            bool sym_backup = symbolic_ ;
+            const bool sym_backup = symbolic_ ;
             symbolic_ = true ;
             this->template compute<Delaunay, PrimalTriangleAction<PRIMTRIACTION> >(
                 m, delaunay_, delaunay_->skeleton(), PrimalTriangleAction<PRIMTRIACTION>(action)
             ) ;
             symbolic_ = sym_backup ;
-            if(exact_) {
+
+            if(exact_)
                 RVD_predicates::end_stats() ;
-            }
+
         }
 
         unsigned int current_facet() const { return current_facet_ ; }
@@ -337,27 +348,33 @@ namespace Geex {
     protected:
         
         void clip_by_cell(
-            const DelaunaySkeleton* skel, 
-            unsigned int v, 
+            const DelaunaySkeleton* skel,
+            const unsigned int v,
             Mesh*& ping, Mesh*& pong
         ) {
-            for(unsigned int i=skel->star_begin(v); i<skel->star_end(v); i++) {
-                unsigned int w = skel->neighbor(i) ;
+            for (unsigned int i = skel->star_begin(v); i < skel->star_end(v); ++i) { // [Canjia Huang] travel neighboring cell adjacent to cell v
+                const unsigned int w = skel->neighbor(i) ;
                 const plane3& P = skel->bisector(i) ;
                 pong->clear() ;
                 clip_by_plane(ping, pong, P, v, w) ;
-                Mesh* tmp = ping; ping = pong; pong = tmp ;
+                Mesh* tmp = ping; ping = pong; pong = tmp ; // swap ping and pong
             }
         }
 
+        /** [Copy from RVD_predicates.h]
+        * returns the side of vertex v with respect
+        * to the bisector of [cell_in, cell_out].
+        * Positive side (resp. negative) is p1's side (resp. p2)
+        * v needs to have symbolic information (RVD needs
+        * to be in symbolic or exact mode). */
         Sign side(
             const plane3& P, 
             const VertexEdge& v,
-            unsigned int cell_in, unsigned int cell_out
+            const unsigned int cell_in, const unsigned int cell_out
         ) const {
             if(exact_) {
-                vec3 p1 = delaunay_->vertex(cell_in) ;
-                vec3 p2 = delaunay_->vertex(cell_out) ;
+                const vec3 p1 = delaunay_->vertex(cell_in) ;
+                const vec3 p2 = delaunay_->vertex(cell_out) ;
                 return RVD_predicates::side(p1, p2, v, this) ; 
             } 
             return (P.side(v) > 0.0 ? POSITIVE : NEGATIVE) ; 
@@ -365,10 +382,10 @@ namespace Geex {
 
         void clip_by_plane(
             Mesh* ping, Mesh* pong, 
-            const plane3& P, 
-            unsigned int cell_in, unsigned int cell_out
+            const plane3& P,
+            const unsigned int cell_in, const unsigned int cell_out
         ) {
-            for(unsigned int f=0; f<ping->nb_facets(); f++) {
+            for (unsigned int f = 0; f < ping->nb_facets(); ++f) {
 
                 bool crosses = false ;
 
@@ -376,73 +393,69 @@ namespace Geex {
                 const VertexEdge* last_v = &(ping->vertex(last_i)) ;
                 Sign last_status = side(P, *last_v, cell_in, cell_out) ;
 
-                for(
-                    unsigned int i=ping->facet_begin(f); 
-                    i<ping->facet_end(f); i++
-                ) {
+                for (unsigned int i = ping->facet_begin(f); i < ping->facet_end(f); ++i) {
                     const VertexEdge* v = &(ping->vertex(i)) ;
-                    Sign status = side(P, *v, cell_in, cell_out) ; 
+                    const Sign status = side(P, *v, cell_in, cell_out) ;
                     
-                    if(status == 0) { // Can only occur in exact mode
+                    if (status == 0) { // Can only occur in exact mode
                         crosses = true ;
-                        if(!pong->in_facet()) { pong->begin_facet() ; }
+                        if (!pong->in_facet())
+                            pong->begin_facet() ;
                         pong->add_vertex(*v) ;
-                    } else {
-                        if(status != last_status) {
+                    }
+                    else {
+                        if (status != last_status) {
                             VertexEdge I ;
-                            if(symbolic_ || exact_) {
+                            if (symbolic_ || exact_)
                                 ping->intersect(I, *last_v, *v, P, cell_out) ;
-                            } else {
+                            else
                                 ping->intersect(I, *last_v, *v, P) ;
-                            }
-                            if(!pong->in_facet()) { pong->begin_facet() ; }
+
+                            if (!pong->in_facet())
+                                pong->begin_facet() ;
                             pong->add_vertex(I) ;
-                            if(status > 0) {
+                            if (status > 0)
                                 pong->top_vertex().set_edge(*last_v) ;
-                            } else {
-                                pong->top_vertex().set_flag(
-                                    VertexEdge::INTERSECT
-                                ) ;
-                            }
+                            else
+                                pong->top_vertex().set_flag(VertexEdge::INTERSECT) ;
                         }
-                        if(status > 0) {
-                            if(!pong->in_facet()) { pong->begin_facet() ; }
+                        if (status > 0) {
+                            if (!pong->in_facet())
+                                pong->begin_facet() ;
                             pong->add_vertex(*v) ;
-                        } else {
-                            crosses = true ;
                         }
+                        else
+                            crosses = true ;
                     }
                     last_v = v ; last_status = status ; last_i = i ; 
                 }
-                if(pong->in_facet())  { 
+                if (pong->in_facet())  {
                     pong->end_facet() ;  
                     pong->facet_info(pong->top()).id = ping->facet_info(f).id ;
                 } 
-                if(crosses) {
+                if (crosses)
                     push(ping->facet_info(f).id, cell_out) ;
-                }
             }
         }
 
-        void visit(unsigned int f, unsigned int cell) {
+        void visit(const unsigned int f, const unsigned int cell) const {
             visited_[f].push_back(cell) ;
             m->mark_facet(f) ;
         }
 
-        bool is_visited(unsigned int f, unsigned int cell) {
-            for(unsigned int i=0; i<visited_[f].size(); i++) {
-                if(visited_[f][i] == cell) { return true ; }
-            }
+        bool is_visited(const unsigned int f, const unsigned int cell) const {
+            for (const unsigned int i : visited_[f])
+                if(i == cell) return true ;
             return false ;
         }
 
         void push(
-            unsigned int f, 
-            unsigned int cell, bool check = true
+            const unsigned int f,
+            const unsigned int cell, const bool check = true
         ) {
-            if(check && is_visited(f, cell)) { return ; }
+            if (check && is_visited(f, cell)) { return ; }
             visit(f, cell) ;
-            S.push(RVDStackItem(f, cell)) ;
+            S.emplace(f, cell) ;
         }
 
     private:
@@ -459,7 +472,7 @@ namespace Geex {
 
     private:
         RestrictedVoronoiDiagram(const thisclass& rhs) ;
-        thisclass& operator=(const thisclass& rhs) ;        
+        thisclass& operator=(const thisclass& rhs) ;
     } ;
 }
 

@@ -185,15 +185,15 @@ namespace Geex {
 
         unsigned int nb_facets() const { return (unsigned int)facet_ptr_.size() - 1 ; }
         unsigned int nb_vertices() const { return (unsigned int)vertex_.size() ; }
-        unsigned int facet_begin(unsigned int f) const {
+        unsigned int facet_begin(const unsigned int f) const {
             return facet_ptr_[f] ;
         }
 
-        unsigned int facet_end(unsigned int f) const {
+        unsigned int facet_end(const unsigned int f) const {
             return facet_ptr_[f+1] ;
         }
 
-        unsigned int facet_size(unsigned int f) const {
+        unsigned int facet_size(const unsigned int f) const {
             return facet_end(f) - facet_begin(f) ;
         }
 
@@ -201,7 +201,7 @@ namespace Geex {
             return vertex(facet_begin(f)+i) ;
         }
 
-        const VertexEdge& facet_vertex(unsigned int f, unsigned int i) const {
+        const VertexEdge& facet_vertex(const unsigned int f, unsigned int i) const {
             return vertex(facet_begin(f)+i) ;
         }
 
@@ -220,9 +220,9 @@ namespace Geex {
          *   const VertexEdge& v3 )
          * Can be for instance an inline function.
          */
-        template<class T> void for_each_triangle(unsigned int f, T& do_it) const {
-            unsigned int i0 = facet_begin(f) ;
-            for(unsigned int i = facet_begin(f)+1; i+1<facet_end(f); i++) {
+        template<class T> void for_each_triangle(const unsigned int f, T& do_it) const {
+            const unsigned int i0 = facet_begin(f) ;
+            for (unsigned int i = facet_begin(f) + 1; i + 1 < facet_end(f); ++i) {
                 do_it(vertex(i0), vertex(i), vertex(i+1)) ;
             }
         }
@@ -235,11 +235,27 @@ namespace Geex {
          * Can be for instance an inline function.
          */
         template<class T> void for_each_triangle(
-            unsigned int f, const T& do_it
+            const unsigned int f, const T& do_it
         ) const {
-            unsigned int i0 = facet_begin(f) ;
-            for(unsigned int i = facet_begin(f)+1; i+1<facet_end(f); i++) {
+            const unsigned int i0 = facet_begin(f) ;
+            for (unsigned int i = facet_begin(f) + 1; i + 1<facet_end(f); ++i)
                 do_it(vertex(i0), vertex(i), vertex(i+1)) ;
+        }
+
+        /**
+         * do_it is supposed to overload operator()(
+         *   const VertexEdge& v1, 
+         *   const VertexEdge& v2, 
+         *   const VertexEdge& v3 )
+         * Can be for instance an inline function.
+         */
+        template<class T> void for_each_triangle(
+            T& do_it
+            ) const {
+            for (unsigned int f = 0; f < nb_facets(); ++f) {
+                const unsigned int i0 = facet_begin(f) ;
+                for (unsigned int i = facet_begin(f) + 1; i + 1 < facet_end(f); ++i)
+                    do_it(vertex(i0), vertex(i), vertex(i+1)) ;
             }
         }
 
@@ -250,28 +266,13 @@ namespace Geex {
          *   const VertexEdge& v3 )
          * Can be for instance an inline function.
          */
-        template<class T> void for_each_triangle(T& do_it) const {
-            for(unsigned int f=0; f<nb_facets(); f++) {
-                unsigned int i0 = facet_begin(f) ;
-                for(unsigned int i = facet_begin(f)+1; i+1<facet_end(f); i++) {
+        template<class T> void for_each_triangle(
+            const T& do_it
+            ) const {
+            for (unsigned int f = 0; f < nb_facets(); ++f) {
+                const unsigned int i0 = facet_begin(f) ;
+                for (unsigned int i = facet_begin(f)+1; i+1<facet_end(f); ++i)
                     do_it(vertex(i0), vertex(i), vertex(i+1)) ;
-                }
-            }
-        }
-
-        /**
-         * do_it is supposed to overload operator()(
-         *   const VertexEdge& v1, 
-         *   const VertexEdge& v2, 
-         *   const VertexEdge& v3 )
-         * Can be for instance an inline function.
-         */
-        template<class T> void for_each_triangle(const T& do_it) const {
-            for(unsigned int f=0; f<nb_facets(); f++) {
-                unsigned int i0 = facet_begin(f) ;
-                for(unsigned int i = facet_begin(f)+1; i+1<facet_end(f); i++) {
-                    do_it(vertex(i0), vertex(i), vertex(i+1)) ;
-                }
             }
         }
 
@@ -287,9 +288,9 @@ namespace Geex {
             return (1.0/n)*result ;
         }
 
-        double facet_area(unsigned int f) const {
+        double facet_area(const unsigned int f) const {
             double result = 0.0 ;
-            unsigned int i0 = facet_begin(f) ;
+            const unsigned int i0 = facet_begin(f) ;
             for(unsigned int i = facet_begin(f)+1; i+1<facet_end(f); i++) {
                 vec3 v1 = vertex(i) - vertex(i0) ;
                 vec3 v2 = vertex(i+1) - vertex(i0) ;
@@ -338,13 +339,13 @@ namespace Geex {
         void unmark_facet(unsigned int f) { 
             facet_info_[f].flags = 0 ;
         }
-        bool facet_is_marked(unsigned int f) const { 
+        bool facet_is_marked(const unsigned int f) const {
             return (facet_info_[f].flags != 0) ;
         }
-        const FacetInfo& facet_info(unsigned int f) const {
+        const FacetInfo& facet_info(const unsigned int f) const {
             return facet_info_[f] ;
         }
-        FacetInfo& facet_info(unsigned int f) {
+        FacetInfo& facet_info(const unsigned int f) {
             return facet_info_[f] ;
         }
 
@@ -362,10 +363,10 @@ namespace Geex {
             return *(vertex_.rbegin()) ;
         }
 
-        bool empty() { return nb_facets() == 0 ; }
+        bool empty() const { return nb_facets() == 0 ; }
 
         // copies facet to target.
-        void copy_facet(unsigned int f, Mesh& target) {
+        void copy_facet(const unsigned int f, Mesh& target) {
             target.begin_facet() ;
             for(unsigned int v = facet_begin(f) ; v < facet_end(f) ; v++) {
                 target.add_vertex(vertex(v)) ;
