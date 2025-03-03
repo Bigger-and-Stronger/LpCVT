@@ -60,7 +60,7 @@ namespace Geex {
     Delaunay::~Delaunay() = default;
 
     Delaunay* Delaunay::create(const std::string& name) {
-		VERBOSE("Creating Delaunay implementation, using " << name);
+		// VERBOSE("Creating Delaunay implementation, using " << name);
         if(name == "CGAL")
             return new Delaunay_CGAL ;
         else {

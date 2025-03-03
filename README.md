@@ -36,7 +36,7 @@ If you use this code, you may need to cite the paper:
 - [Boost](https://www.boost.org)
 - [CGAL](https://www.cgal.org/index.html) (version >= 5.0)
 - [Eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page)
-- [LBFGSpp](https://github.com/yixuan/LBFGSpp) (already included)
+- [LBFGS++](https://github.com/yixuan/LBFGSpp) (already included)
 
 # :checkered_flag: Getting started
 

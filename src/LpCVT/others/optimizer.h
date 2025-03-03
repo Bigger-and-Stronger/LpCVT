@@ -21,14 +21,22 @@ namespace Geex {
 
         void write_pts(const std::string& filename) const ;
 
+        template<class T> void solve(const T& solver) {
+            solver();
+        }
+
         void optimize();
     private:
         Mesh M_;
         std::vector<vec3> pts_;
-
         bool volume_ = false;
-        unsigned int p_ = 4;
+        unsigned int p_ = 8;
     };
+
+    double compute_f_grad(
+        Mesh* M, const std::vector<vec3>& pts,
+        bool volume, unsigned int p,
+        std::vector<double>& grad);
 }
 
 #endif //OPTIMIZE_H

@@ -32,7 +32,7 @@ int main() {
 		Geex::Mesh mesh;
 		mesh.load(input_mesh_path);
 		std::vector<Geex::vec3> pts;
-		Geex::sample_mesh_pts(mesh, pts, 1000);
+		Geex::sample_mesh_pts(mesh, pts, 5000);
 		Geex::write_pts("../data/test_sample_pts.obj", pts);
 
 		return 1;
