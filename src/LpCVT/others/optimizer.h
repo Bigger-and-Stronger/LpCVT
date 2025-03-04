@@ -9,34 +9,22 @@
 #include <LpCVT/combinatorics/mesh.h>
 
 namespace Geex {
-    class Optimizer {
-    public:
-        Optimizer() {};
-
-        /** Read reference mesh **/
-        void read_mesh(const std::string& filename);
-
-        /** Read initial pts **/
-        bool read_pts(const std::string& filename);
-
-        void write_pts(const std::string& filename) const ;
-
-        template<class T> void solve(const T& solver) {
-            solver();
-        }
-
-        void optimize();
-    private:
-        Mesh M_;
-        std::vector<vec3> pts_;
-        bool volume_ = false;
-        unsigned int p_ = 8;
-    };
-
+    /** For a given reference mesh and the current sampling points,
+     *  calculate the F_{L_p} energy and the gradient for each point.
+     * @param[out] grad the gradient for each point
+     * @return total F_{L_p}
+     */
     double compute_f_grad(
         Mesh* M, const std::vector<vec3>& pts,
         bool volume, unsigned int p,
         std::vector<double>& grad);
+
+    /** optimize the sample points
+     * class "solver" needs to have the constructor (M, pts, volume, p),
+     * and a "solve()" function to optimize the pts **/
+    template<class T> void optimize(const T& solver) {
+        solver.solve();
+    }
 }
 
 #endif //OPTIMIZE_H

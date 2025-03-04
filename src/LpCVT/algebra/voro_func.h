@@ -43,6 +43,8 @@
  *
  */
 
+// This code has been modified by Canjia Huang <canjia7@gmail.com> on 25-3-4.
+
 #ifndef __VORO_FUNC_H__
 #define __VORO_FUNC_H__
 
@@ -121,7 +123,7 @@ namespace Geex {
             Q = &(Qin[0]) ;
             g = &(gradient[0]) ;
 
-            for(unsigned int i=0; i<3; i++) {
+            for (unsigned int i=0; i<3; ++i) {
                 Ix[i].g = g ;
                 Ix[i].X = &(X[0]) ;
             }

@@ -4,35 +4,12 @@
 //
 
 #include "LpCVT/others/Geex_test_combinatorics.h"
+#include "LpCVT/others/IO.h"
 #include "LpCVT/others/macro.h"
 
 #include <LpCVT/common/line_stream.h>
 
 namespace Geex {
-	bool load_pts(
-		const std::string& filename, std::vector<vec3>& pts
-		) {
-		std::vector<vec3>().swap(pts);
-		std::ifstream in_stream(filename);
-		if (!in_stream) {
-			WARNING("Could not open " << filename);
-			return false;
-		}
-		LineInputStream in(in_stream);
-		while (!in.eof()) {
-			in.get_line();
-			std::string kw;
-			in >> kw;
-			if (kw == "v") {
-				vec3 v;
-				in >> v;
-				pts.push_back(v);
-			}
-		}
-
-		return true;
-	}
-
 	// ------------------------------ RDT ------------------------------
 	/** Used by save_RDT(). **/
 	class SavePrimalTriangle {
