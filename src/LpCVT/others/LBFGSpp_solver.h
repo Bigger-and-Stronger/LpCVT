@@ -16,7 +16,7 @@ namespace LBFGSppSolver{
     /** Used for optimizing verbose**/
     class verbose_f_g {
     public:
-        verbose_f_g(unsigned int iter, double f, std::vector<double>& g
+        verbose_f_g(const unsigned int iter, const double f, std::vector<double>& g
             ) : iter_(iter), f_(f), g_(g) {}
 
         void operator()() const {

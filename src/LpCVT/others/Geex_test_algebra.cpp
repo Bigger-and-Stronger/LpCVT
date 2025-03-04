@@ -119,7 +119,8 @@ namespace Geex {
 	}
 
     void test_algebra(
-    	const std::string& mesh_filename, const std::string& pts_filename
+    	const std::string& mesh_filename, const std::string& pts_filename,
+    	const int p
     	) {
         Mesh M;
         const unsigned int nb_borders = M.load(mesh_filename);
@@ -129,10 +130,10 @@ namespace Geex {
 
         if (nb_borders == 0) {
             VERBOSE("========== volume LpCVT test ==========");
-            compute_F_g(&M, pts, 4, true);
+            compute_F_g(&M, pts, p, true);
         }
 
         VERBOSE("========== surface LpCVT test ==========");
-        compute_F_g(&M, pts, 4, false);
+        compute_F_g(&M, pts, p, false);
     }
 }

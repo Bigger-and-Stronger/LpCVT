@@ -41,7 +41,8 @@ namespace Geex {
 		unsigned int p,
 		bool volume);
 
-	void test_algebra(const std::string& mesh_filename, const std::string& pts_filename);
+	void test_algebra(const std::string& mesh_filename, const std::string& pts_filename,
+		const int p);
 }
 
 #endif //GEEX_TEST_ALGEBRA_H

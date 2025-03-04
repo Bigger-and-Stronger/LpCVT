@@ -37,6 +37,7 @@ If you use this code, you may need to cite the paper:
 - [CGAL](https://www.cgal.org/index.html) (version >= 5.0)
 - [Eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page)
 - [LBFGS++](https://github.com/yixuan/LBFGSpp) (already included)
+- [CLI11](https://github.com/CLIUtils/CLI11?tab=readme-ov-file#install) (already included)
 
 # :checkered_flag: Getting started
 
