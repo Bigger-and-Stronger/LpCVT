@@ -47,9 +47,6 @@ git clone https://github.com/Bigger-and-Stronger/LpCVT.git
 
 # :hammer: Build
 
-In Windows
-
-In macOS
 ```
 mkdir build
 cd build
@@ -58,6 +55,17 @@ make
 ```
 
 # :computer: Usage
+
+```
+./LpCVT [OPTIONS] meshPath ptsPath [outputDir]
+```
+
+| OPTIONS | Type | Description |
+| - | - | - |
+|  `-h, --help` | | Print this help message and exit |
+| `-p, -P` | UINT | Set L_p, p must be even |
+| `-v, -V` | | Volume or not? |
+| `-o, -O` | | Optimize? |
 
 # :bar_chart: Output
 
