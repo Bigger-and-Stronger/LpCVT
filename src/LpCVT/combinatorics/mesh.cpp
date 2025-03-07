@@ -103,7 +103,7 @@ namespace Geex {
                 vec3 p ;
                 in >> p ;
                 vertex.push_back(p) ;
-                star.emplace_back(); // XXX: I dont know if this is correct... original: star.push_back( std::vector<unsigned int>() ) ;
+                star.emplace_back();
             }
             else if (keyword == "HEADER")
                 v_offset = static_cast<unsigned int>(vertex.size()) ;
@@ -112,7 +112,7 @@ namespace Geex {
                 vec3 p ;
                 in >> idx >> p ;
                 vertex.push_back(p) ;
-                star.emplace_back(); // XXX: I dont know if this is correct... original: star.push_back( std::vector<unsigned int>() ) ;
+                star.emplace_back();
             }
             else if (keyword == "TRGL") {
                 int i1, i2, i3 ;
