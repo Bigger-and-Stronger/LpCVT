@@ -22,7 +22,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake ..
+          cmake -DBOOST_ROOT=/usr/include/boost ..
           
       - name: build
         run: |
