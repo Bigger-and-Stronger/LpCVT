@@ -84,7 +84,7 @@ namespace Geex {
 		const unsigned int p,
 		const bool volume
 		) {
-		VERBOSE("nb pts = " << pts.size() << "   nb facets = " << m->nb_facets());
+		VERBOSE("nb pts = " << pts.size() << " nb facets = " << m->nb_facets());
 		std::vector<int> I;
 		std::vector<vec3> C;
 		std::vector<int> F;
@@ -111,6 +111,7 @@ namespace Geex {
 
 		gnorm = ::sqrt(gnorm);
 		std::cout.precision(16);
+
 		VERBOSE(
 			(volume ? "volume " : "surface ")
 			<< "F_L" << p << ":"

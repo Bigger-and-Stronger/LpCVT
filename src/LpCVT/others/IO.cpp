@@ -50,4 +50,20 @@ namespace Geex{
 
         return true;
     }
+
+    bool write_xyz(
+        const std::string& filename, const std::vector<vec3>& pts
+        ) {
+        std::ofstream out(filename);
+        if (!out.good()) {
+            WARNING("Could not write " << filename);
+            return false;
+        }
+
+        VERBOSE("write pts to " << filename);
+        for (const auto& pt : pts)
+            out << pt << std::endl;
+
+        return true;
+    }
 }

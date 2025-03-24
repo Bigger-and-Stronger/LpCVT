@@ -17,6 +17,6 @@ namespace Geex{
     /** write pts to file **/
     bool write_pts(const std::string& filename, const std::vector<vec3>& pts);
 
-    bool write_vtk(const std::string& filename, const std::vector<vec3>& pts);
+    bool write_xyz(const std::string& filename, const std::vector<vec3>& pts);
 }
 #endif //IO_H

@@ -30,6 +30,8 @@ If you use this code, you may need to cite the paper:
 # :bulb: What did I do?
 - The data files have been reorganized to make this project lighter.
 - Parts of the code have been rearranged and reorganized.
+- Added optimization process using LBFGS.
+- Added command line applications.
 
 # :link: Requirements / dependencies
 
@@ -57,16 +59,21 @@ make
 # :computer: Usage
 
 ```
-./LpCVT [OPTIONS] meshPath ptsPath [outputDir]
+./LpCVT [OPTIONS] meshPath [ptsPath]
 ```
 
 | OPTIONS | Type | Description |
 | - | - | - |
+| meshPath | TEXT: FILE | (REQUIRED) Reference mesh path |
 |  `-h, --help` | | Print this help message and exit |
-| `-p, -P` | UINT | Set L_p, p must be even |
-| `-v, -V` | | Volume or not? |
-| `-o, -O` | | Optimize? |
+| `-p, -P` | UINT | Set L_p, p must be even, default: 2 |
+| `-v, -V` | | Calculate in volume, default: fasle |
+| `-m, -M` | UINT | Maximum number of iterations, default: 100 |
+| `-s, -S` | UINT | The number of randomly sampled points on the input mesh, default: 1e4 |
+| ptsPath | TEXT: FILE | Pts path |
 
-# :bar_chart: Output
+## Example
 
-# :children_crossing: Add to your code
+```
+./LpCVT -p 4 -m 50 -s 10000 ../data/three_holes.obj
+```

@@ -27,8 +27,8 @@ namespace LBFGSppSolver{
 
             std::cout.precision(16);
             VERBOSE(
-                "iter=" << iter_ << " "
-                "f=" << std::scientific << f_ << "  g=" << gnorm
+                "iter=" << iter_ <<
+                " f=" << std::scientific << f_ << "  g=" << gnorm
                 );
         }
     private:
@@ -84,6 +84,8 @@ namespace LBFGSppSolver{
     public:
         LBFGSpp_solver(Mesh* M, std::vector<vec3>& pts, const bool volume, const unsigned int p
             ) : M_(M), pts_(pts), volume_(volume), p_(p) {}
+        LBFGSpp_solver(Mesh* M, std::vector<vec3>& pts, const bool volume, const unsigned int p, unsigned int max_iter
+        ) : M_(M), pts_(pts), volume_(volume), p_(p), param_max_iterations_(max_iter) {}
 
         double solve() const {
             LBFGSpp::LBFGSParam<double> param;
