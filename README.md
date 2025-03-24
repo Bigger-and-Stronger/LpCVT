@@ -76,5 +76,5 @@ make
 ## Example
 
 ```
-./LpCVT -p 4 -m 50 -s 10000 ../data/three_holes.obj
+./LpCVT -p 4 -m 50 -s 20000 ../data/three_holes.obj
 ```
