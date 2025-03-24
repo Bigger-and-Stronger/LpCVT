@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
-find_package(boost REQUIRED)
+find_package(Boost REQUIRED)
 find_package(CGAL 5.0 QUIET REQUIRED COMPONENTS Core)
 
 file(GLOB_RECURSE SOURCES 
