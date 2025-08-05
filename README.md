@@ -2,6 +2,29 @@
 ![MacOS](https://github.com/Bigger-and-Stronger/LpCVT/actions/workflows/macos-build.yml/badge.svg)
 ![Linux](https://github.com/Bigger-and-Stronger/LpCVT/actions/workflows/linux-build.yml/badge.svg)
 
+<table>
+<tr>
+<th>Input mesh</th>
+<th>Input sample points</th>	
+</tr>
+<tr>
+<td> <img src=".pic/input_mesh.png"> </td>
+<td> <img src=".pic/input_points.png"> </td>
+</tr>
+<th>Result mesh (p=4)</th>
+<th>Result sample points (p=4)</th>
+</tr>
+<td> <img src=".pic/res_mesh.png"> </td>
+<td> <img src=".pic/res_points.png"> </td>
+</tr>
+<th>Result RVD (p=4)</th>
+<th>Result CVD (p=4)</th>
+</tr>
+<td> <img src=".pic/res_RVD.png"> </td>
+<td> <img src=".pic/res_CVD.png"> </td>
+</tr>
+</table>
+
 This repo is a reorganization of the source code of the paper "**Lp Centroidal Voronoi Tessellation and its applications**". [[Paper]](https://dl.acm.org/doi/abs/10.1145/1778765.1778856)
 
 The original source code is from https://xueyuhanlang.github.io, and the code has been rearranged by [secantalpha](https://github.com/secantalpha), with some modifications made to ensure compatibility with CGAL 5.0 or a later version. The code of this repo is based on the version [secantalpha/LpCVT](https://github.com/secantalpha/LpCVT).
