@@ -54,10 +54,12 @@ If you use this code, you may need to cite the paper:
 ```
 
 # :bulb: What did I do?
-- The data files have been reorganized to make this project lighter.
-- Parts of the code have been rearranged and reorganized.
-- Added optimization process using LBFGS.
-- Added command line applications.
+- [x] The data files have been reorganized to make this project lighter.
+- [x] Parts of the code have been rearranged and reorganized.
+- [x] Added optimization process using LBFGS.
+- [x] Added command line applications.
+- [ ] Surface curvature aligned CVT
+- [ ] Cross field aligned CVT
 
 # :link: Requirements / dependencies
 
