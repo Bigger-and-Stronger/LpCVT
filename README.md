@@ -60,6 +60,7 @@ If you use this code, you may need to cite the paper:
 - [x] Added command line applications.
 - [ ] Surface curvature aligned CVT
 - [ ] Cross field aligned CVT
+- [ ] Depend on Geogram only
 
 # :link: Requirements / dependencies
 
