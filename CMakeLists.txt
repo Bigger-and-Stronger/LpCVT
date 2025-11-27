@@ -1,36 +1,44 @@
 # this CMakeLists.txt is copy from https://github.com/secantalpha/LpCVT/blob/main/sources/LpCVT/CMakeLists.txt, and make some modifies
 
-cmake_minimum_required(VERSION 3.21)
+########################################################################################################################
+# CMake options
+########################################################################################################################
+cmake_minimum_required(VERSION 3.30)
 
 project(LpCVT)
 
-set(CMAKE_CXX_STANDARD 17)
+if(WIN32)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /utf-8")
+endif()
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Eigen3 REQUIRED)
-include_directories(${EIGEN3_INCLUDE_DIR})
-find_package(Boost REQUIRED)
-find_package(CGAL 5.0 QUIET REQUIRED COMPONENTS Core)
+########################################################################################################################
+# CMake module path
+########################################################################################################################
+list(PREPEND CMAKE_MODULE_PATH
+        ${CMAKE_CURRENT_LIST_DIR}/cmake)
 
-file(GLOB_RECURSE SOURCES 
-    ${PROJECT_SOURCE_DIR}/src/*.h
-    ${PROJECT_SOURCE_DIR}/src/*.cpp)
+########################################################################################################################
+# Set variables
+########################################################################################################################
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin) # Set output path for the compiled files
+set(GEOGRAM_DIR         "$ENV{GEOGRAM_DIR}" CACHE PATH "Directory where Geogram is installed")
+set(OPTION_BUILD_TESTS  ON CACHE BOOL "Build tests (based on GoogleTest).")
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+########################################################################################################################
+# Include 3rdParty
+########################################################################################################################
+include(Dependencies)
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/src)
-target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/src/LpCVT/external)
-target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/src/LpCVT/external/LBFGSpp)
-target_include_directories(${PROJECT_NAME} PRIVATE ${GMP_INCLUDE_DIR})
+########################################################################################################################
+# Add subdirectories
+########################################################################################################################
+add_subdirectory(src)
+add_subdirectory(app)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE CGAL::CGAL)
-
-IF(NOT ${APPLE})
-    set(GMP_DLL "${GMP_INCLUDE_DIR}/../lib/libgmp-10.dll")
-    add_custom_command(
-            TARGET ${PROJECT_NAME}
-            POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${GMP_DLL}
-            $<TARGET_FILE_DIR:LpCVT>)
-ENDIF ()
-
+message(STATUS "ENABLE_BUILD_TESTS = ${OPTION_BUILD_TESTS}")
+if(OPTION_BUILD_TESTS)
+    add_subdirectory(tests)
+endif()

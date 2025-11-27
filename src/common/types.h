@@ -46,9 +46,9 @@
 #ifndef __GEEX_MATHEMATICS_TYPES__
 #define __GEEX_MATHEMATICS_TYPES__
 
-#include <LpCVT/common/vecg.h>
-#include <LpCVT/common/matrix.h>
-#include <LpCVT/common/plane.h>
+#include "vecg.h"
+#include "matrix.h"
+#include "plane.h"
 
 #include <math.h>
 #include <assert.h>

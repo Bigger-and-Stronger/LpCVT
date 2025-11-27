@@ -43,7 +43,7 @@
  *
  */
 
-#include <LpCVT/common/processor.h>
+#include "processor.h"
 
 #ifdef WIN32
 #include <Windows.h>
