@@ -64,9 +64,9 @@ If you use this code, you may need to cite the paper:
 - [x] Parts of the code have been rearranged and reorganized.
 - [x] Added optimization process using LBFGS.
 - [x] Added command line applications.
-- [ ] Surface curvature aligned CVT
-- [ ] Cross field aligned CVT
-- [ ] Depend on Geogram only
+- [x] Surface curvature aligned CVT (see [geolio/LpCVT](https://github.com/Canjia-Huang/geolio/tree/main/src/geolio/LpCVT))
+- [x] Cross field aligned CVT (see [geolio/LpCVT](https://github.com/Canjia-Huang/geolio/tree/main/src/geolio/LpCVT))
+- [x] Depend on Geogram only (see [geolio/LpCVT](https://github.com/Canjia-Huang/geolio/tree/main/src/geolio/LpCVT))
 
 # :link: Requirements / dependencies
 
