@@ -2,7 +2,7 @@
 
 # :boom: News!
 
-I refactored this project based on the new version of the [Geogram](https://github.com/BrunoLevy/geogram) library. This makes it no longer depend on CGAL, which was required in the original project, or on a large amount of redundant Voronoi diagram-related computation. It also makes the computation faster and more stable. Therefore, this project only provides a copy of the original version of the project code for reference. For a more modern version, see [geolio/LpCVT](https://github.com/Canjia-Huang/geolio/tree/main/src/geolio/LpCVT) for more details!
+I refactored this project based on the new version of the [Geogram](https://github.com/BrunoLevy/geogram) library. This makes it no longer depend on CGAL, which was required in the original project, or on a large amount of redundant Voronoi diagram-related computation. It also makes the computation faster and more stable, while also supporting anisotropic metric alignment. Therefore, this project only provides a copy of the original version of the project code for reference. For a more modern version, see [geolio/LpCVT](https://github.com/Canjia-Huang/geolio/tree/main/src/geolio/LpCVT) for more details!
 
 ---
 
